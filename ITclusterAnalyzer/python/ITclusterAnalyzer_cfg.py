@@ -45,14 +45,14 @@ process.content = cms.EDAnalyzer("EventContentAnalyzer")
 # the config of my analyzer
 process.BRIL_IT_Analysis = cms.EDAnalyzer('ITclusterAnalyzer',
                                          clusters=cms.InputTag("siPixelClusters"),
-                                         simlinks=cms.InputTag("simSiPixelDigis", "Pixel", "FULLSIM"),
-                                         digis=cms.InputTag("simSiPixelDigis", "Pixel", "FULLSIM"),
+                                         simlinks=cms.InputTag("simSiPixelDigis", "Pixel", "HLT"),
+                                         digis=cms.InputTag("simSiPixelDigis", "Pixel", "HLT"),
                                          # simlinks=cms.InputTag("Pixel"),
                                          # simtracks=cms.InputTag("g4SimHits"),
                                          maxBin=cms.untracked.uint32(5000),
                                          docoincidence=cms.untracked.bool(True),
-                                         dx_cut=cms.double(.1),
-                                         dy_cut=cms.double(.1),
+                                         dx_cut=cms.double(0.1),
+                                         dy_cut=cms.double(0.1),
                                          dz_cut=cms.double(0.9)
                                          )
 
