@@ -79,6 +79,28 @@ struct Residual {
 
 };
 
+struct Residual1{
+
+  double x_1;
+  double x_2;
+  double y_1;
+  double y_2;
+
+  double dR_1;
+  double dR_2;
+  double dR;
+
+  Residual1(double x_1, double x_2, double y_1, double y_2) {
+
+    dR_1 = sqrt(pow(x_1, 2) + pow(y_1, 2));
+    dR_2 = sqrt(pow(x_2, 2) + pow(y_2, 2));
+    dR = sqrt(pow(x_2, 2) + pow(y_2, 2))- sqrt(pow(x_1, 2) + pow(y_1, 2));
+
+    std::cout <<" dR_1 is: " << dR_1 << " dR_2 is: " << dR_2 << " dR is: " << dR;
+
+      }
+};
+
 class Ashish2xCoincidence : public edm::one::EDAnalyzer<edm::one::SharedResources> {
 public:
   explicit Ashish2xCoincidence(const edm::ParameterSet&);
@@ -146,6 +168,8 @@ private:
   TH1F* m_residualX_InR;
   TH1F* m_residualY_InR;
   TH1F* m_residualR_InR;
+
+  TH1F* m_residualR1;
   //the number of clusters per module
   TH1F* m_nClusters;
   TH1F* m_nHits;
@@ -217,7 +241,9 @@ Ashish2xCoincidence::Ashish2xCoincidence(const edm::ParameterSet& iConfig)
 
     m_residualX = td.make<TH1F>("ResidualsX", "ResidualsX;deltaX;counts", 1000, 0, 1);
     m_residualY = td.make<TH1F>("ResidualsY", "ResidualsY;deltaY;counts", 1000, 0, 1);
-    m_residualR = td.make<TH1F>("ResidualsR", "ResidualsR;deltaR;counts", 1000, 0, 1);
+    m_residualR = td.make<TH1F>("ResidualsR", "ResidualsR;deltaR;counts", 1000, -1, 1);
+
+    m_residualR1 = td.make<TH1F>("ResidualsR1", "ResidualsR1;deltaR1;counts1", 1000, -1, 1);
 
     m_residualX_InR = td.make<TH1F>("ResidualsXInR", "ResidualsX;deltaX;counts", 1000, 0, 1);
     m_residualY_InR = td.make<TH1F>("ResidualsYInR", "ResidualsY;deltaY;counts", 1000, 0, 1);
@@ -801,9 +827,10 @@ bool Ashish2xCoincidence::findCoincidenceInR2x(DetId thedetid, Global3DPoint the
             }
 
             if (nClu > 1) {
+	      if(areSame){
                 for (auto r : r_vec) {
                     if (r.dr == r_min) {
-                        if (isTEPX) {
+                        if (isTEPX && thering == 1) {
                             m_residualX_InR->Fill(r.dx);
                             m_residualY_InR->Fill(r.dy);
                             m_residualR_InR->Fill(r.dr); 
@@ -811,7 +838,7 @@ bool Ashish2xCoincidence::findCoincidenceInR2x(DetId thedetid, Global3DPoint the
                     }
                 }
             }
-
+	    }
             //debugging...
             //std::cout << "closest overlapping cluster for module " << foundDetId << " is " << foundCluster 
             //          << " with dr of " << r_min << std::endl;
@@ -902,7 +929,9 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
     unsigned int nClu = 0;
     //at the end of the day, need to find the closest coincidence hit, so store the minimum 2D distance in a temporary variable and a vector for all values
     double r_min = 1000.;
+
     std::vector<Residual> r_vec;
+    std::vector<Residual1>r_vec1;
 
     //make the return value end();
     foundCluster = theit->end();
@@ -922,6 +951,15 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
 
 	double delta_x = fabs(globalPosClu.x() - theglobalPosClu.x());
 	double delta_y = fabs(globalPosClu.y() - theglobalPosClu.y());
+
+	double X_1 = theglobalPosClu.x();
+	double X_2 = globalPosClu.x();
+	double Y_1 = theglobalPosClu.y();
+	double Y_2 = globalPosClu.y();
+
+	Residual1 r1(X_1, X_2, Y_1, Y_2);
+	r_vec1.push_back(r1);
+
 	Residual r(delta_x, delta_y);
 	r_vec.push_back(r);
 
@@ -941,21 +979,26 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
     }
 
     if (nClu > 1) {
+      if(areSame){
       //std::cout << "Warning, found " << nClu << "Clusters within the cuts - the minimum distance is " << r_min << "!" << std::endl;
       //std::cout << "All distances: ";
       for (auto r : r_vec) {
+	for (auto r1 : r_vec1){
 	//r.print();
 	if (r.dr == r_min) {
-	  if (isTEPX) {
+	  if (isTEPX && thering == 1) {
 	    m_residualX->Fill(r.dx);
 	    m_residualY->Fill(r.dy);
 	    m_residualR->Fill(r.dr);
+	    m_residualR1->Fill(r1.dR);
+
 	  } 
 	}
       }
       //std::cout << std::endl;
+      }
     }
-    
+    }
     return found;
 
 }
