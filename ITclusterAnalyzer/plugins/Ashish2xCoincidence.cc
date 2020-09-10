@@ -9,8 +9,8 @@ Implementation:
 [Notes on implementation]
 */
 //
-// Original Author:  Georg Auzinger
-//         Created:  Wed, 05 Dec 2018 15:10:16 GMT
+// Original Author:  Ashish Sehrawat
+//         Created:  Tue, 01 Sep 2020 13:41:06 GMT
 //
 //
 
@@ -52,7 +52,8 @@ Implementation:
 #include "FWCore/ServiceRegistry/interface/Service.h"
 
 #include <TH2F.h>
-
+#include <TMath.h>
+#include <TStyle.h>
 //
 // class declaration
 //
@@ -81,24 +82,45 @@ struct Residual {
 
 struct Residual1{
 
-  double x_1;
-  double x_2;
-  double y_1;
-  double y_2;
+double x_1;
+double x_2;
+double y_1;
+double y_2;
 
-  double dR_1;
-  double dR_2;
-  double dR;
+double R_1;
+double R_2;
+double dR;
 
-  Residual1(double x_1, double x_2, double y_1, double y_2) {
+Residual1(double x_1, double x_2, double y_1, double y_2) {
 
-    dR_1 = sqrt(pow(x_1, 2) + pow(y_1, 2));
-    dR_2 = sqrt(pow(x_2, 2) + pow(y_2, 2));
-    dR = sqrt(pow(x_2, 2) + pow(y_2, 2))- sqrt(pow(x_1, 2) + pow(y_1, 2));
+R_1 = sqrt(pow(x_1, 2) + pow(y_1, 2));
+R_2 = sqrt(pow(x_2, 2) + pow(y_2, 2));
+ dR = sqrt(pow(x_1, 2) + pow(y_1, 2)) - sqrt(pow(x_2, 2) + pow(y_2, 2));
 
-    std::cout <<" dR_1 is: " << dR_1 << " dR_2 is: " << dR_2 << " dR is: " << dR;
+//std::cout <<" dR_1 is: " << dR_1 << " dR_2 is: " << dR_2 << " dR is: " << dR;
 
-      }
+ }
+};
+
+
+struct deltaphiset{
+
+  double_t phi_1;
+  double_t phi_2;
+  double_t deltaphi;
+  
+
+  deltaphiset(double x_1, double x_2, double y_1, double y_2, double_t phi_1, double_t phi_2){
+
+    phi_1 = TMath::ATan2(y_2, x_2);
+    phi_2 = TMath::ATan2(y_1, x_1);
+    deltaphi = phi_1 - phi_2;
+
+    //std::cout << " " << phi_1 << "  " << phi_2 << "  " << deltaphi; 
+
+
+  }
+
 };
 
 class Ashish2xCoincidence : public edm::one::EDAnalyzer<edm::one::SharedResources> {
@@ -114,8 +136,8 @@ private:
   virtual void endJob() override;
 
   //bool findCoincidence(DetId, Global3DPoint, bool);
-  bool findCoincidence2x(DetId, Global3DPoint, bool, unsigned int&, edmNew::DetSet<SiPixelCluster>::const_iterator&, bool);
-  bool findCoincidenceInR2x(DetId, Global3DPoint, bool, std::vector<unsigned int>&, std::vector<edmNew::DetSet<SiPixelCluster>::const_iterator>&, std::vector<float>&, bool);
+  const SiPixelCluster* findCoincidence2x(DetId, Global3DPoint, bool, unsigned int&);
+  bool findCoincidenceInR2x(DetId, Global3DPoint, bool, std::vector<unsigned int>&, std::vector<edmNew::DetSet<SiPixelCluster>::const_iterator>&, std::vector<float>&);
   edm::DetSetVector<PixelDigiSimLink>::const_iterator findSimLinkDetSet(unsigned int thedetid);
   std::set<unsigned int> getSimTrackId(edm::DetSetVector<PixelDigiSimLink>::const_iterator, edmNew::DetSet<SiPixelCluster>::const_iterator, bool print);
   bool areSameSimTrackId(std::set<unsigned int> first, std::set<unsigned int> second, std::set<unsigned int>&);
@@ -140,14 +162,12 @@ private:
 
   //array of TH2F for clusters per disk per ring
   TH2F* m_diskHistosCluster[8];
-  //array of TH2F for hits per disk per ring
-  TH2F* m_diskHistosHits[8];
+ 
   //tracker maps for clusters
   TH2F* m_trackerLayoutClustersZR;
   TH2F* m_trackerLayoutClustersYX;
-  //tracker maps for hits
-  TH2F* m_trackerLayoutHitsZR;
-  TH2F* m_trackerLayoutHitsYX;
+ 
+
   //array of TH2F for 2xcoinc per disk per ring
   //first all coincidences
   TH2F* m_diskHistos2x[8];
@@ -161,15 +181,32 @@ private:
   TH2F* m_trackerLayout2xZR_InR;
   TH2F* m_trackerLayout2xYX_InR;
 
-  //simple residual histograms for the cuts
+
   TH1F* m_residualX;
   TH1F* m_residualY;
   TH1F* m_residualR;
+  TH1F* m_residualR1;
+  TH1F* m_deltaphi;
+
+
+  //simple residual histograms for the cuts
+  TH1F* m_residualX_sametrack;
+  TH1F* m_residualY_sametrack;
+  TH1F* m_residualR_sametrack;
   TH1F* m_residualX_InR;
   TH1F* m_residualY_InR;
   TH1F* m_residualR_InR;
+  TH1F* m_residualR1_sametrack;
+  TH1F* m_deltaphi_sametrack;
 
-  TH1F* m_residualR1;
+
+  TH1F* m_residualX_notsametrack;
+  TH1F* m_residualY_notsametrack;
+  TH1F* m_residualR_notsametrack;
+
+  TH1F* m_residualR1_notsametrack;
+  TH1F* m_deltaphi_notsametrack;
+
   //the number of clusters per module
   TH1F* m_nClusters;
   TH1F* m_nHits;
@@ -239,11 +276,27 @@ Ashish2xCoincidence::Ashish2xCoincidence(const edm::ParameterSet& iConfig)
 
     td = fs->mkdir("TEPX/Residuals");
 
-    m_residualX = td.make<TH1F>("ResidualsX", "ResidualsX;deltaX;counts", 1000, 0, 1);
-    m_residualY = td.make<TH1F>("ResidualsY", "ResidualsY;deltaY;counts", 1000, 0, 1);
-    m_residualR = td.make<TH1F>("ResidualsR", "ResidualsR;deltaR;counts", 1000, -1, 1);
 
-    m_residualR1 = td.make<TH1F>("ResidualsR1", "ResidualsR1;deltaR1;counts1", 1000, -1, 1);
+    m_residualX = td.make<TH1F>("ResidualsX", "ResidualsX;deltaX;counts", 1000, 0, 10);
+    m_residualY = td.make<TH1F>("ResidualsY", "ResidualsY;deltaY;counts", 1000, 0, 10);
+    m_residualR = td.make<TH1F>("ResidualsR", "ResidualsR;deltaR;counts", 1000, 0, 10);
+    m_residualR1 = td.make<TH1F>("ResidualsR1", "ResidualsR1;R1-R2;counts", 1000, -1, 1);
+    m_deltaphi = td.make<TH1F>("Deltaphi", "Deltaphi;phi1-phi2;counts", 1000, -1, 1);
+
+
+
+    m_residualX_sametrack = td.make<TH1F>("ResidualsX_sametrack", "ResidualsX_sametrack;deltaX;counts", 1000, 0, 10);
+    m_residualY_sametrack = td.make<TH1F>("ResidualsY_sametrack", "ResidualsY_sametrack;deltaY;counts", 1000, 0, 10);
+    m_residualR_sametrack = td.make<TH1F>("ResidualsR_sametrack", "ResidualsR_sametrack;deltaR;counts", 1000, 0, 10);
+    m_residualR1_sametrack = td.make<TH1F>("ResidualsR1_sametrack", "ResidualsR1_sametrack;R1-R2;counts", 1000, -1, 1);
+    m_deltaphi_sametrack = td.make<TH1F>("Deltaphi_sametrack", "Deltaphi_sametrack;phi1-phi2;counts", 1000, -1, 1);
+
+
+    m_residualX_notsametrack = td.make<TH1F>("ResidualsX_notsametrack", "ResidualsX_notsametrack;deltaX;counts", 1000, 0, 10);
+    m_residualY_notsametrack = td.make<TH1F>("ResidualsY_notsametrack", "ResidualsY_notsametrack;deltaY;counts", 1000, 0, 10);
+    m_residualR_notsametrack = td.make<TH1F>("ResidualsR_notsametrack", "ResidualsR_notsametrack;deltaR;counts", 1000, 0, 10);
+    m_residualR1_notsametrack = td.make<TH1F>("ResidualsR1_notsametrack", "ResidualsR1_notsametrack;R1-R2;counts", 1000, -1, 1);
+    m_deltaphi_notsametrack = td.make<TH1F>("Deltaphi_notsametrack", "Deltaphi_notsametrack;phi1-phi2;counts", 1000, -1, 1);
 
     m_residualX_InR = td.make<TH1F>("ResidualsXInR", "ResidualsX;deltaX;counts", 1000, 0, 1);
     m_residualY_InR = td.make<TH1F>("ResidualsYInR", "ResidualsY;deltaY;counts", 1000, 0, 1);
@@ -270,21 +323,7 @@ Ashish2xCoincidence::Ashish2xCoincidence(const edm::ParameterSet& iConfig)
     m_trackerLayoutClustersZR = td.make<TH2F>("RVsZ", "R vs. z position", 6000, -300.0, 300.0, 600, 0.0, 30.0);
     m_trackerLayoutClustersYX = td.make<TH2F>("XVsY", "x vs. y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
 
-    fs->file().cd("/");
-    td = fs->mkdir("TEPX/Hits");
-
-    //histograms
-    for (unsigned int i = 0; i < 8; i++) {
-      int disk = (i < 4) ? i - 4 : i - 3;
-      std::stringstream histoname;
-      histoname << "Number of hits for Disk " << disk << ";Ring;# of Hits per event";
-      std::stringstream histotitle;
-      histotitle << "Number of hits for Disk " << disk;
-      m_diskHistosHits[i] = td.make<TH2F>(histotitle.str().c_str(), histoname.str().c_str(), 5, .5, 5.5, m_maxBin, 0, m_maxBin);
-    }
-
-    m_trackerLayoutHitsZR = td.make<TH2F>("RVsZ", "R vs. z position", 6000, -300.0, 300.0, 600, 0.0, 30.0);
-    m_trackerLayoutHitsYX = td.make<TH2F>("XVsY", "x vs. y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
+   
 
     if (m_docoincidence) {
       fs->file().cd("/");
@@ -321,7 +360,7 @@ Ashish2xCoincidence::Ashish2xCoincidence(const edm::ParameterSet& iConfig)
       m_trackerLayout2xZR = td.make<TH2F>("RVsZ", "R vs. z position", 6000, -300.0, 300.0, 600, 0.0, 30.0);
       m_trackerLayout2xYX = td.make<TH2F>("XVsY", "x vs. y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
       m_trackerLayout2xZR_InR = td.make<TH2F>("RVsZ_InR", "R vs. z position", 6000, -300.0, 300.0, 600, 0.0, 30.0);
-        m_trackerLayout2xYX_InR = td.make<TH2F>("XVsY_InR", "x vs. y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
+      m_trackerLayout2xYX_InR = td.make<TH2F>("XVsY_InR", "x vs. y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
     }
   }
 
@@ -364,9 +403,7 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
     //a 2D counter array to count the number of clusters per disk and per ring
     unsigned int cluCounter[8][5];
     memset(cluCounter, 0, sizeof(cluCounter));
-//counter array for hits per disk and per ring
-    unsigned int hitCounter[8][5];
-    memset(hitCounter, 0, sizeof(hitCounter));
+
 //counter for 2x coincidences
     unsigned int x2Counter[8][5];
     memset(x2Counter, 0, sizeof(x2Counter));
@@ -375,82 +412,7 @@ unsigned int x2CounterInR[8][5];
 unsigned int x2Counterreal[8][5];
     memset(x2Counterreal, 0, sizeof(x2Counterreal));
 unsigned int x2CounterrealInR[8][5];
-    memset(x2CounterrealInR, 0, sizeof(x2CounterrealInR));
-
-
-//-------------------------------------------------------------
-    //loop over digis - COB 26.02.19
-    //debugging...
-    //std::cout << "--- New event ---" << std::endl;
-    for (typename edm::DetSetVector<PixelDigi>::const_iterator DSVit = digis->begin(); DSVit != digis->end(); DSVit++) {
-
-        //get the detid
-        unsigned int rawid(DSVit->detId());
-        DetId detId(rawid);
-
-        //debugging...
-        //std::cout << "DetId " << std::hex << "0x" << rawid << std::dec << " " << detId.det() << " " << detId.subdetId() << " " 
-        //          << ((rawid >> 23) & 0x3) << " " << ((rawid >> 18) & 0xF) << " " << ((rawid >> 12) & 0x3F) << " " 
-        //          << ((rawid >> 2) & 0xFF) << std::endl;
-        //std::cout << "side " << tTopo->pxfSide(detId) << " layer " << tTopo->pxfDisk(detId) << " ring " << tTopo->pxfBlade(detId) 
-        //          << " module " << tTopo->pxfModule(detId) << std::endl;       
-
-        //module type => need phase 2 pixel forward module, in endcap
-	TrackerGeometry::ModuleType mType = tkGeom->getDetectorType(detId);
-        if (mType != TrackerGeometry::ModuleType::Ph2PXF && detId.subdetId() != PixelSubdetector::PixelEndcap) 
-	  continue;
-
-        //obtaining side, disk, ring of module
-        unsigned int side = (tTopo->pxfSide(detId));   
-        unsigned int disk = (tTopo->pxfDisk(detId));
-        unsigned int ring = (tTopo->pxfBlade(detId));
-
-        if (disk > 8) { // TEPX modules
-
-	  //index in histogram map
-	  int hist_id = -1;
-	  unsigned int ring_id = ring - 1;
-	  if (side == 1) {
-	    //this is a TEPX- hit on side1
-	    hist_id = disk - 9;
-	  } else if (side == 2) {
-	    //this is a TEPX+ hit on side 2
-	    hist_id = 4 + disk - 9;
-	  }
-
-	  //find the geometry of the module associated to the digi
-	  const GeomDetUnit* geomDetUnit(tkGeom->idToDetUnit(detId));
-	  if (!geomDetUnit)
-	    continue;
-
-	  //store the total number of digis in module
-	  m_nHits->Fill(DSVit->size());
-
-	  //loop over the digis in each module
-	  for (edm::DetSet<PixelDigi>::const_iterator digit = DSVit->begin(); digit != DSVit->end(); digit++) {
-
-	    hitCounter[hist_id][ring_id]++;
-
-	    //finding the position of the hit
-	    MeasurementPoint mpHit(digit->row(), digit->column());
-	    Local3DPoint localPosHit = geomDetUnit->topology().localPosition(mpHit);
-	    Global3DPoint globalPosHit = geomDetUnit->surface().toGlobal(localPosHit);
-
-	    //debugging...
-	    //std::cout << "---- Hit info:" << std::endl;
-	    //std::cout << "measurement point of hit => row " << digit->row() << " column " << digit->column() << std::endl;
-	    //std::cout << "local position of hit => x " << localPosHit.x() << " y " << localPosHit.y() 
-	    //          << " z " << localPosHit.z() << std::endl;
-	    //std::cout << "global position of hit => x " << globalPosHit.x() << " y " << globalPosHit.y() 
-	    //          << " z " << globalPosHit.z() << std::endl;
-
-	    //fill layout histograms
-	    m_trackerLayoutHitsZR->Fill(globalPosHit.z(), globalPosHit.perp());
-	    m_trackerLayoutHitsYX->Fill(globalPosHit.x(), globalPosHit.y());
-
-	  }
-	}
-    }
+ memset(x2CounterrealInR, 0, sizeof(x2CounterrealInR));
 
 
     //-------------------------------------------------------------
@@ -508,11 +470,25 @@ unsigned int x2CounterrealInR[8][5];
 	  MeasurementPoint mpClu(cluit->x(), cluit->y());
 	  Local3DPoint localPosClu = geomDetUnit->topology().localPosition(mpClu);
 	  Global3DPoint globalPosClu = geomDetUnit->surface().toGlobal(localPosClu);
+     
 
-	  //fill TkLayout histos
+	  
+     
+	  // Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());
+	  // Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
+          //double_t delta_phi = phi2 - phi1;
+
+
+	  //std::cout << " phi angle of the original cluster is " << phi1 << std::endl;
+	  // std::cout << " phi angle of the coincidence cluster is " << phi2 << std::endl;
+	  //std::cout << " difference in phi angle of th original and coincidence cluster is " << delta_phi  << std::endl;
+
+
+	  
+          //fill TkLayout histos
 	  //if((side == 2 && ring == 1 && ((rawid >> 2) & 0xFF) == 1) || (side == 2 && ring == 1 && ((rawid >> 2) & 0xFF) == 19)){           
 	  //if((side == 2 && ring == 2 && ((rawid >> 2) & 0xFF) == 2) || (side == 2 && ring == 3 && ((rawid >> 2) & 0xFF) == 1)){ 
-	  if (side == 2 && layer == 12 && ring == 1 && ((rawid >> 2) & 0xFF) == 1){
+	  if (side == 2 && layer == 12 && ring == 1 && ((rawid >> 2) & 0xFF) < 3){
 	    m_trackerLayoutClustersZR->Fill(globalPosClu.z(), globalPosClu.perp());
 	    m_trackerLayoutClustersYX->Fill(globalPosClu.x(), globalPosClu.y());
 
@@ -529,40 +505,111 @@ unsigned int x2CounterrealInR[8][5];
 	    //std::cout << globalPosClu.x() << " " << globalPosClu.y() << std::endl;
 	    //std::cout << globalPosClu.z() << std::endl;
 	    //std::cout << globalPosClu.x() << "      " << globalPosClu.y() <<  "      " << globalPosClu.z() <<"     "<< tTopo->pxfSide(detId) << "    " << tTopo->pxfDisk(detId) << "      " << tTopo->pxfBlade(detId) << "      " << tTopo->pxfModule(detId)  << std::endl;
-	  }
+	     }
 	  
 
 	  if (m_docoincidence) {
 	    unsigned int coincidenceId;
-	    edmNew::DetSet<SiPixelCluster>::const_iterator coincidenceCluster;
-	    bool found = this->findCoincidence2x(detId, globalPosClu, true, coincidenceId, coincidenceCluster, true);
-	    if (found) {
+	    const SiPixelCluster* found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu, true, coincidenceId);
+	    if (found2xcoincidencecluster) {
 	      m_total2xcoincidences++;
 	      x2Counter[hist_id][ring_id]++;
-	      //I have found a coincidence hit, so now I need to check the sim Track ID of each of the two clusters
-	      //so first, let's get the simTrackID of the original cluster-for this I need to loop over all pixels
-	      //and check if multiple SimTracks have caused it
-	      //if that is not the case, I use the SimLink DSViter and the DSiter (cluit) to get a simTrackID
-	      //I need to use the DetId of the coincidence cluster to get another SimLinkDSViter and the coincidence 
-	      //cluster DSiter for the second simTrackID
+
+	      //m_trackerLayout2xZR->Fill(globalPosClu.z(), globalPosClu.perp());
+	      //m_trackerLayout2xYX->Fill(globalPosClu.x(), globalPosClu.y());
+
+	      MeasurementPoint mpcoincidenceClu(found2xcoincidencecluster->x(), found2xcoincidencecluster->y());
+	      Local3DPoint thelocalPosClu = geomDetUnit->topology().localPosition(mpcoincidenceClu);
+	      Global3DPoint theglobalPosClu = geomDetUnit->surface().toGlobal(thelocalPosClu);
+
+	      //std::cout << " " << theglobalPosClu.x() << "  " << theglobalPosClu.y() << std::endl;
+   
 
 	      //now get the simlink detset
 	      edm::DetSetVector<PixelDigiSimLink>::const_iterator simLinkDSViter = findSimLinkDetSet(rawid);
 	      std::set<unsigned int> simTrackId = this->getSimTrackId(simLinkDSViter, cluit, false);
 	      //now get the simlink detset based on the coincidence hit detid
 	      simLinkDSViter = findSimLinkDetSet(coincidenceId);
-	      std::set<unsigned int> coincidencesimTrackId = this->getSimTrackId(simLinkDSViter, coincidenceCluster, false);
+	      std::set<unsigned int> coincidencesimTrackId = this->getSimTrackId(simLinkDSViter, found2xcoincidencecluster, false);
 	      std::set<unsigned int> intersection;
 	      bool areSame = areSameSimTrackId(simTrackId, coincidencesimTrackId, intersection);
 
-	      if (areSame) {
-		x2Counterreal[hist_id][ring_id]++;
-	      } else {
-		m_fake2xcoincidences++;
-	      }
+	      std::vector<Residual> r_vec;
+	      std::vector<Residual1>r_vec1;
+	      std::vector<deltaphiset>phiangle;
 
-	      m_trackerLayout2xZR->Fill(globalPosClu.z(), globalPosClu.perp());
-	      m_trackerLayout2xYX->Fill(globalPosClu.x(), globalPosClu.y());
+	      double delta_x = fabs(globalPosClu.x() - theglobalPosClu.x());
+	      double delta_y = fabs(globalPosClu.y() - theglobalPosClu.y());
+
+	      Residual r(delta_x, delta_y);
+              r_vec.push_back(r);
+
+
+	      double X_1 = theglobalPosClu.x();
+	      double X_2 = globalPosClu.x();
+	      double Y_1 = theglobalPosClu.y();
+	      double Y_2 = globalPosClu.y();
+
+	      Residual1 r1(X_1, X_2, Y_1, Y_2);
+              r_vec1.push_back(r1);
+
+
+	      Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());                                                                            Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
+
+	      deltaphiset clusterphiangle(X_1, X_2, Y_1, Y_2, phi1, phi2);
+	      phiangle.push_back(clusterphiangle);
+
+	      //Residual r(delta_x, delta_y);
+	      //r_vec.push_back(r);
+
+	      //Residual1 r1(X_1, X_2, Y_1, Y_2);
+	      //r_vec1.push_back(r1);
+
+
+	      //double r_min = 1000.;
+	      
+	      if(ring == 5){
+              for (auto r : r_vec) {
+		for (auto r1 : r_vec1){
+		  for (auto clusterphiangle : phiangle){ 
+	     
+
+		    m_residualX->Fill(r.dx);
+		    m_residualY->Fill(r.dy);
+		    m_residualR->Fill(r.dr);
+		    m_residualR1->Fill(r1.dR);
+		    m_deltaphi -> Fill(clusterphiangle.deltaphi);
+
+                    if (areSame) {
+		
+		     
+		x2Counterreal[hist_id][ring_id]++;
+		                                                                                                                            
+		 m_residualX_sametrack->Fill(r.dx);                                                                                         
+		 m_residualY_sametrack->Fill(r.dy);                                                                     
+	         m_residualR_sametrack->Fill(r.dr);                                                            
+		 m_residualR1_sametrack->Fill(r1.dR);                                              
+		 m_deltaphi_sametrack -> Fill(clusterphiangle.deltaphi);
+		  
+		  
+		    } else if(!areSame) {
+
+		m_fake2xcoincidences++;
+
+		m_residualX_notsametrack->Fill(r.dx);
+		m_residualY_notsametrack->Fill(r.dy);
+		m_residualR_notsametrack->Fill(r.dr);
+		m_residualR1_notsametrack->Fill(r1.dR);
+		m_deltaphi_notsametrack -> Fill(clusterphiangle.deltaphi);
+
+
+		    } 
+		}
+		}
+	      }
+	      }
+	       m_trackerLayout2xZR->Fill(theglobalPosClu.z(), theglobalPosClu.perp());
+	      m_trackerLayout2xYX->Fill(theglobalPosClu.x(), theglobalPosClu.y());
 
 
 
@@ -572,7 +619,7 @@ unsigned int x2CounterrealInR[8][5];
 	  std::vector<unsigned int> coincidenceIdInR;
 	  std::vector<edmNew::DetSet<SiPixelCluster>::const_iterator> coincidenceClusterInR;
 	  std::vector<float> coincidenceClusterdr;
-	  bool found2xinR = this-> findCoincidenceInR2x(detId, globalPosClu, true, coincidenceIdInR, coincidenceClusterInR, coincidenceClusterdr, true);
+	  bool found2xinR = this-> findCoincidenceInR2x(detId, globalPosClu, true, coincidenceIdInR, coincidenceClusterInR, coincidenceClusterdr);
 	  if (found2xinR) {
 	    m_total2xcoincidencesInR++;
 	    x2CounterInR[hist_id][ring_id]++;
@@ -619,7 +666,7 @@ for (unsigned int i = 0; i < 8; i++) {  // TEPX
   for (unsigned int j = 0; j < 5; j++) {
     //and the rings
     m_diskHistosCluster[i]->Fill(j + 1, cluCounter[i][j]);
-    m_diskHistosHits[i]->Fill(j + 1, hitCounter[i][j]);
+    //  m_diskHistosHits[i]->Fill(j + 1, hitCounter[i][j]);
     if (m_docoincidence) {
       m_diskHistos2x[i]->Fill(j + 1, x2Counter[i][j]);
       m_diskHistos2xreal[i]->Fill(j + 1, x2Counterreal[i][j]);
@@ -665,7 +712,7 @@ void Ashish2xCoincidence::fillDescriptions(edm::ConfigurationDescriptions& descr
 //----------
 //Adding function to find 2x coincidences in R
 //COB - 21.May.2019
-bool Ashish2xCoincidence::findCoincidenceInR2x(DetId thedetid, Global3DPoint theglobalPosClu, bool isTEPX, std::vector<unsigned int>& ovModIds, std::vector<edmNew::DetSet<SiPixelCluster>::const_iterator>& ovClusIds, std::vector<float>& ovDr, bool areSame) {
+bool Ashish2xCoincidence::findCoincidenceInR2x(DetId thedetid, Global3DPoint theglobalPosClu, bool isTEPX, std::vector<unsigned int>& ovModIds, std::vector<edmNew::DetSet<SiPixelCluster>::const_iterator>& ovClusIds, std::vector<float>& ovDr) {
 
   bool found = false;
 
@@ -827,14 +874,14 @@ bool Ashish2xCoincidence::findCoincidenceInR2x(DetId thedetid, Global3DPoint the
             }
 
             if (nClu > 1) {
-	      if(areSame){
+	      //  if(areSame){
                 for (auto r : r_vec) {
                     if (r.dr == r_min) {
-                        if (isTEPX && thering == 1) {
+                        if (isTEPX) {
                             m_residualX_InR->Fill(r.dx);
                             m_residualY_InR->Fill(r.dy);
-                            m_residualR_InR->Fill(r.dr); 
-                        }
+	                   m_residualR_InR->Fill(r.dr); 
+			   //         }
                     }
                 }
             }
@@ -873,9 +920,10 @@ bool Ashish2xCoincidence::findCoincidenceInR2x(DetId thedetid, Global3DPoint the
 
 //---------
 
-bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglobalPosClu, bool isTEPX, unsigned int& foundDetId, edmNew::DetSet<SiPixelCluster>::const_iterator& foundCluster, bool areSame) {
+const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglobalPosClu, bool isTEPX, unsigned int& foundDetId) {
 
-    bool found = false;
+    const SiPixelCluster* found2xcoincidencecluster = NULL; 
+    //bool found = false;
     uint32_t rawid = thedetid.rawId();
     uint32_t newid = rawid;
     //now I have the raw ID and can mess with the bits
@@ -916,8 +964,9 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
 
     edmNew::DetSetVector<SiPixelCluster>::const_iterator theit = clusters->find(id);
     if (theit == clusters->end()) {
-        return false;
-    }
+      // return false;
+      return found2xcoincidencecluster;   
+ }
 
     // Get the geomdet
     const GeomDetUnit* geomDetUnit(tkGeom->idToDetUnit(id));
@@ -931,10 +980,11 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
     double r_min = 1000.;
 
     std::vector<Residual> r_vec;
-    std::vector<Residual1>r_vec1;
+    //std::vector<Residual1>r_vec1;
+    //std::vector<deltaphiset>phiangle;
 
     //make the return value end();
-    foundCluster = theit->end();
+    //foundCluster = theit->end();
 
     for (edmNew::DetSet<SiPixelCluster>::const_iterator cluit = theit->begin(); cluit != theit->end(); cluit++) {
 
@@ -942,6 +992,21 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
       MeasurementPoint mpClu(cluit->x(), cluit->y());
       Local3DPoint localPosClu = geomDetUnit->topology().localPosition(mpClu);
       Global3DPoint globalPosClu = geomDetUnit->surface().toGlobal(localPosClu);
+
+      //Double_t phi = TMath::ATan2(cluit->y(), cluit->x());
+
+   
+
+	//Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());
+	//Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
+	//double_t delta_phi = phi2 - phi1;
+
+
+      //std::cout << " phi angle of the original cluster is " << phi1 << std::endl;
+      //std::cout << " phi angle of the coincidence cluster is " << phi2 << std::endl;
+      //std::cout << " difference in phi angle of th original and coincidence cluster is " << delta_phi  << std::endl;
+
+
 
       //now check that the global position is within the cuts
       if (fabs(globalPosClu.x() - theglobalPosClu.x()) < m_dx
@@ -952,23 +1017,32 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
 	double delta_x = fabs(globalPosClu.x() - theglobalPosClu.x());
 	double delta_y = fabs(globalPosClu.y() - theglobalPosClu.y());
 
-	double X_1 = theglobalPosClu.x();
-	double X_2 = globalPosClu.x();
-	double Y_1 = theglobalPosClu.y();
-	double Y_2 = globalPosClu.y();
+	//double X_1 = theglobalPosClu.x();
+	//double X_2 = globalPosClu.x();
+	//double Y_1 = theglobalPosClu.y();
+	//double Y_2 = globalPosClu.y();
 
-	Residual1 r1(X_1, X_2, Y_1, Y_2);
-	r_vec1.push_back(r1);
+	//Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());                                                                   
+	// Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());                                                             
+	//Double_t delta_phi = phi2-phi1; 
+
+	//deltaphiset clusterphiangle(X_1, X_2, Y_1, Y_2, phi1, phi2);
+	//phiangle.push_back(clusterphiangle);
 
 	Residual r(delta_x, delta_y);
 	r_vec.push_back(r);
 
+	//Residual1 r1(X_1, X_2, Y_1, Y_2);
+	//r_vec1.push_back(r1);
+
+
 	if (r.dr < r_min) {
 	  r_min = r.dr;
-	  found = true;
+	  //found = true;
 	  // I assign this here to always have the closest cluster
-	  foundCluster = cluit;
+	  //foundCluster = cluit;
 	  foundDetId = newid;
+	  found2xcoincidencecluster = cluit; 
 	}
 
 	//std::cout << "Found matching cluster # " << nClu << std::endl;
@@ -978,29 +1052,35 @@ bool Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Global3DPoint theglo
       }
     }
 
-    if (nClu > 1) {
-      if(areSame){
+    // if (nClu > 1) {
+      //if(areSame){
       //std::cout << "Warning, found " << nClu << "Clusters within the cuts - the minimum distance is " << r_min << "!" << std::endl;
       //std::cout << "All distances: ";
-      for (auto r : r_vec) {
-	for (auto r1 : r_vec1){
+      //for (auto clusterphiangle : phiangle){
+      //for (auto r : r_vec) {
+    //	for (auto r1 : r_vec1){
 	//r.print();
-	if (r.dr == r_min) {
-	  if (isTEPX && thering == 1) {
-	    m_residualX->Fill(r.dx);
-	    m_residualY->Fill(r.dy);
-	    m_residualR->Fill(r.dr);
-	    m_residualR1->Fill(r1.dR);
+    //	if (r.dr == r_min) {
+    //	  if (isTEPX) {
+    //	    m_residualX->Fill(r.dx);
+    //	    m_residualY->Fill(r.dy);
+    //	    m_residualR->Fill(r.dr);
+    //	    m_residualR1->Fill(r1.dR);
+    //	    m_deltaphi -> Fill(clusterphiangle.deltaphi);
 
-	  } 
-	}
-      }
+	    //       } 
+    //	}
+    //	    	}
+    //}
       //std::cout << std::endl;
-      }
-    }
-    }
-    return found;
+    // }
+    // }
+    // }
 
+  
+
+    // return found;
+    return found2xcoincidencecluster;
 }
 
 
