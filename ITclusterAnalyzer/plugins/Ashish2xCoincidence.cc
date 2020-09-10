@@ -554,7 +554,9 @@ unsigned int x2CounterrealInR[8][5];
               r_vec1.push_back(r1);
 
 
-	      Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());                                                                            Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
+	      Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());  
+                                                                          
+              Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
 
 	      deltaphiset clusterphiangle(X_1, X_2, Y_1, Y_2, phi1, phi2);
 	      phiangle.push_back(clusterphiangle);
