@@ -781,8 +781,8 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 	      if((phi2-phi1) < m_dphi_ring1 && dr < m_dr_ring1){    
 		if(ring == 1){
 		  for (auto r : r_vec) {
-		    for (auto r1 : r_vec1){
-		      for (auto clusterphiangle : phiangle){ 
+		    for (auto r1 : r_vec1) {
+		      for (auto clusterphiangle : phiangle) { 
 			
 
 			m_residualX_Ring1->Fill(r.dX);
@@ -821,11 +821,11 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 		}
 	      }
 	      
-	      if((phi2-phi1) < m_dphi_ring2 && dr < m_dr_ring2){
-		if(ring == 2){
+	      if((phi2-phi1) < m_dphi_ring2 && dr < m_dr_ring2) {
+		if(ring == 2) {
 		for (auto r : r_vec) {
 		  for (auto r1 : r_vec1){
-		    for (auto clusterphiangle : phiangle){
+		    for (auto clusterphiangle : phiangle) {
 		      
 		      m_residualX_Ring2->Fill(r.dX);
 		      m_residualY_Ring2->Fill(r.dY);
@@ -861,11 +861,11 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 	       }	
 	      }
 
-	      if((phi2-phi1) < m_dphi_ring3 && dr < m_dr_ring3){
-		if(ring == 3){
+	      if((phi2-phi1) < m_dphi_ring3 && dr < m_dr_ring3) {
+		if(ring == 3) {
 		  for (auto r : r_vec) {
-		    for (auto r1 : r_vec1){
-		      for (auto clusterphiangle : phiangle){
+		    for (auto r1 : r_vec1) {
+		      for (auto clusterphiangle : phiangle) {
 			
 		       m_residualX_Ring3->Fill(r.dX);
 		       m_residualY_Ring3->Fill(r.dY);
@@ -900,11 +900,11 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 		}
 	      }
 
-	      if((phi2-phi1) < m_dphi_ring4 && dr < m_dr_ring4){
-		if(ring == 4){
+	      if((phi2-phi1) < m_dphi_ring4 && dr < m_dr_ring4) {
+		if(ring == 4) { 
 		  for (auto r : r_vec) {
-		    for (auto r1 : r_vec1){
-		      for (auto clusterphiangle : phiangle){
+		    for (auto r1 : r_vec1) {
+		      for (auto clusterphiangle : phiangle) {
 
 			m_residualX_Ring4->Fill(r.dX);
 			m_residualY_Ring4->Fill(r.dX);
@@ -939,11 +939,11 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 		}
 	      }
 
-	      if((phi2-phi1) < m_dphi_ring5 && dr < m_dr_ring5){
+	      if((phi2-phi1) < m_dphi_ring5 && dr < m_dr_ring5) {
 		if(ring == 5){
 		  for (auto r : r_vec) {
-		    for (auto r1 : r_vec1){
-		      for (auto clusterphiangle : phiangle){
+		    for (auto r1 : r_vec1) {
+		      for (auto clusterphiangle : phiangle) {
 			
 			m_residualX_Ring5->Fill(r.dX);
 			m_residualY_Ring5->Fill(r.dY);
@@ -1421,7 +1421,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       double phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
       
       
-      if((phi2-phi1) < m_dphi_ring1 && dr < m_dr_ring1 && thering == 1){
+      if((phi2-phi1) < m_dphi_ring1 && dr < m_dr_ring1 && thering == 1) {
 	
 	nClu++;
 	
@@ -1447,8 +1447,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	r_vec1.push_back(r1);
 	
 	
-	if (r1.dr < r_min){
-	  if(clusterphiangle.deltaphi < phi_min){
+	if (r1.dr < r_min) {
+	  if(clusterphiangle.deltaphi < phi_min) {
 	    
 	    r_min = r1.dr;
 	    phi_min = clusterphiangle.deltaphi;
@@ -1461,7 +1461,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
 
       
-      if((phi2-phi1) < m_dphi_ring2 && dr < m_dr_ring2 && thering == 2){
+      if((phi2-phi1) < m_dphi_ring2 && dr < m_dr_ring2 && thering == 2) {
 	
         nClu++;
 	
@@ -1488,8 +1488,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
         r_vec1.push_back(r1);
 
         
-	if (r1.dr < r_min){
-	  if(clusterphiangle.deltaphi < phi_min){                                                                                                                     
+	if (r1.dr < r_min) {
+	  if(clusterphiangle.deltaphi < phi_min) {                                                                                                                     
 	    r_min = r1.dr;
 	    phi_min =   clusterphiangle.deltaphi;                                                                                           
 	    foundDetId = newid;
@@ -1500,7 +1500,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring3 && dr < m_dr_ring3 && thering == 3){
+      if((phi2-phi1) < m_dphi_ring3 && dr < m_dr_ring3 && thering == 3) {
 	
         nClu++;
 	
@@ -1528,8 +1528,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	
 	
         
-        if (r1.dr < r_min){
-          if(clusterphiangle.deltaphi < phi_min){
+        if (r1.dr < r_min) {
+          if(clusterphiangle.deltaphi < phi_min) {
 	    
             r_min = r1.dr;
             phi_min = clusterphiangle.deltaphi;                                                                                             
@@ -1542,7 +1542,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring4 && dr < m_dr_ring4 && thering == 4){
+      if((phi2-phi1) < m_dphi_ring4 && dr < m_dr_ring4 && thering == 4) {
 	
 	nClu++;
 	
@@ -1570,8 +1570,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	
         
 	
-	if (r1.dr < r_min){
-          if(clusterphiangle.deltaphi < phi_min){
+	if (r1.dr < r_min) {
+          if(clusterphiangle.deltaphi < phi_min) {
 	    
 	    r_min = r1.dr;
             phi_min = clusterphiangle.deltaphi;
@@ -1583,7 +1583,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring5 && dr < m_dr_ring5 && thering == 5){
+      if((phi2-phi1) < m_dphi_ring5 && dr < m_dr_ring5 && thering == 5) {
 	
         nClu++;
 
@@ -1612,8 +1612,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	                                                                                                                
 	
 	
-        if (r1.dr < r_min){
-          if(clusterphiangle.deltaphi < phi_min){
+        if (r1.dr < r_min) {
+          if(clusterphiangle.deltaphi < phi_min) {
 	     
             r_min = r1.dr;
             phi_min = clusterphiangle.deltaphi;
@@ -1654,7 +1654,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       double phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());
       double phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
       
-      if((phi2-phi1) < m_dphi_ring1 && dr < m_dr_ring1 && thering == 1){
+      if((phi2-phi1) < m_dphi_ring1 && dr < m_dr_ring1 && thering == 1) {
 	
 	nClu++;
 	
@@ -1680,8 +1680,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	r_vec1.push_back(r1);
 	
 	
-	if (r1.dr < r_min){
-	  if(clusterphiangle.deltaphi < phi_min){
+	if (r1.dr < r_min) {
+	  if(clusterphiangle.deltaphi < phi_min) {
 	    
 	    r_min = r1.dr;
 	    phi_min = clusterphiangle.deltaphi;	    
@@ -1694,7 +1694,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring2 && dr < m_dr_ring2 && thering == 2){
+      if((phi2-phi1) < m_dphi_ring2 && dr < m_dr_ring2 && thering == 2) {
 	
         nClu++;
 	
@@ -1721,8 +1721,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
         r_vec1.push_back(r1);
 	
         
-	if (r1.dr < r_min){
-	  if(clusterphiangle.deltaphi < phi_min){
+	if (r1.dr < r_min) {
+	  if(clusterphiangle.deltaphi < phi_min) {
 	    
 	    r_min = r1.dr;
 	    phi_min = clusterphiangle.deltaphi;                                                                                             
@@ -1734,7 +1734,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring3 && dr < m_dr_ring3 && thering == 3){
+      if((phi2-phi1) < m_dphi_ring3 && dr < m_dr_ring3 && thering == 3) {
 	
         nClu++;
 	
@@ -1762,8 +1762,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	
 	
 	
-        if (r1.dr < r_min){
-          if(clusterphiangle.deltaphi < phi_min){
+        if (r1.dr < r_min) {
+          if(clusterphiangle.deltaphi < phi_min) {
 	    
 	    
 	    
@@ -1779,7 +1779,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring4 && dr < m_dr_ring4 && thering == 4){
+      if((phi2-phi1) < m_dphi_ring4 && dr < m_dr_ring4 && thering == 4) {
 	
 	nClu++;
 	
@@ -1807,8 +1807,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	
         
 	
-	if (r1.dr < r_min){
-          if(clusterphiangle.deltaphi < phi_min){
+	if (r1.dr < r_min) {
+          if(clusterphiangle.deltaphi < phi_min) {
 	 
 	    r_min = r1.dr;
             phi_min = clusterphiangle.deltaphi;
@@ -1822,7 +1822,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       }
       
       
-      if((phi2-phi1) < m_dphi_ring5 && dr < m_dr_ring5 && thering == 5){
+      if((phi2-phi1) < m_dphi_ring5 && dr < m_dr_ring5 && thering == 5) {
 	
         nClu++;
 	
@@ -1851,11 +1851,10 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	
 	
 	
-        if (r1.dr < r_min){
-          if(clusterphiangle.deltaphi < phi_min){
+        if (r1.dr < r_min) {
+          if(clusterphiangle.deltaphi < phi_min) {
 	    
 	  
-	    
             r_min = r1.dr;
             phi_min = clusterphiangle.deltaphi;
 	    foundDetId = newid1;
