@@ -973,24 +973,6 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
     bool areSame = areSameSimTrackId(simTrackId, coincidencesimTrackId, intersection);
 
     
-    //Double_t phi = TMath::ATan2(cluit->y(), cluit->x());
-    
-    //Double_t phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());
-    //Double_t phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
-    //double_t delta_phi = phi2 - phi1;
-    
-    
-    //std::cout << " phi angle of the original cluster is " << phi1 << std::endl;
-    //std::cout << " phi angle of the coincidence cluster is " << phi2 << std::endl;
-    //std::cout << " difference in phi angle of th original and coincidence cluster is " << delta_phi  << std::endl;
-    
-    //double delta_X = fabs(globalPosClu.x() - theglobalPosClu.x());
-    //double delta_Y = fabs(globalPosClu.y() - theglobalPosClu.y());
-    
-    //double x_1 = theglobalPosClu.x();
-    //double x_2 = globalPosClu.x();
-    //double y_1 = theglobalPosClu.y();
-    //double y_2 = globalPosClu.y();
     
     double dr = sqrt(pow(theglobalPosClu.x(), 2) + pow(theglobalPosClu.y(), 2)) - sqrt(pow(globalPosClu.x(), 2) + pow(globalPosClu.y(), 2));
     
@@ -998,12 +980,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
     double phi1 = TMath::ATan2(globalPosClu.y(), globalPosClu.x());
     double phi2 = TMath::ATan2(theglobalPosClu.y(), theglobalPosClu.x());
     
-    
-    //now check that the global position is within the cuts
-    //if (fabs(globalPosClu.x() - theglobalPosClu.x()) < m_dx
-    // && fabs(globalPosClu.y() - theglobalPosClu.y()) < m_dy
-    // && fabs(globalPosClu.z() - theglobalPosClu.z()) < m_dz) {
-    
+     
     if((phi2-phi1) < m_dphi_ring1 && dr < m_dr_ring1 && thering == 1){
       
       nClu++;
