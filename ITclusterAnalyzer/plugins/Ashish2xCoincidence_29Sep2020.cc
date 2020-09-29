@@ -1559,7 +1559,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 
     
 
-      //    if (nClu > 1) {
+        if (nClu > 1) {
       //if(areSame){
       //std::cout << "Warning, found " << nClu << "Clusters within the cuts - the minimum distance is " << r_min << "!" << std::endl;
       //std::cout << "All distances: ";
@@ -1613,7 +1613,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
 	 m_deltaphi_Ring1_notsametrack->Fill(deltaphi);
 	      
       }
-      // }
+       }
       // }
       
       
