@@ -706,39 +706,34 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
       
       unsigned int nClu = 0;
 	
-	//fill the number of clusters for this module
-	m_nClusters->Fill(DSVit->size());
+      //fill the number of clusters for this module
+      m_nClusters->Fill(DSVit->size());
+      
+      //now loop the clusters for each detector
+      for (edmNew::DetSet<SiPixelCluster>::const_iterator cluit = DSVit->begin(); cluit != DSVit->end(); cluit++) {
+	//increment the counters
+	nClu++;
+	cluCounter[hist_id][ring_id]++;
 	
-	//now loop the clusters for each detector
-	for (edmNew::DetSet<SiPixelCluster>::const_iterator cluit = DSVit->begin(); cluit != DSVit->end(); cluit++) {
-	  //increment the counters
-	  nClu++;
-	  cluCounter[hist_id][ring_id]++;
-
-	  // determine the position
-	  MeasurementPoint mpClu(cluit->x(), cluit->y());
-	  Local3DPoint localPosClu = geomDetUnit->topology().localPosition(mpClu);
-	  Global3DPoint globalPosClu = geomDetUnit->surface().toGlobal(localPosClu);
-	  
-	 
-	  m_trackerLayoutClustersZR->Fill(globalPosClu.z(), globalPosClu.perp());
-	  m_trackerLayoutClustersYX->Fill(globalPosClu.x(), globalPosClu.y());
-	  
-	  
-	  if (m_docoincidence) {
-	    if(((rawid >> 2) & 0xFF) % 2 != 0){
+	// determine the position
+	MeasurementPoint mpClu(cluit->x(), cluit->y());
+	Local3DPoint localPosClu = geomDetUnit->topology().localPosition(mpClu);
+	Global3DPoint globalPosClu = geomDetUnit->surface().toGlobal(localPosClu);
+	
+	
+	m_trackerLayoutClustersZR->Fill(globalPosClu.z(), globalPosClu.perp());
+	m_trackerLayoutClustersYX->Fill(globalPosClu.x(), globalPosClu.y());
+	
+	
+	if (m_docoincidence) {
+	  if(((rawid >> 2) & 0xFF) % 2 != 0){
 	    
 	    unsigned int coincidenceId;
 	    const SiPixelCluster* found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu, true, coincidenceId);
 	    if (found2xcoincidencecluster) {
-	      // m_total2xcoincidences_ring1++;
-	      //m_total2xcoincidences_ring2++;
-	      //m_total2xcoincidences_ring3++;
-	      //m_total2xcoincidences_ring4++;
-	      //m_total2xcoincidences_ring5++;
 	      
 	      x2Counter[hist_id][ring_id]++;
-
+	      
 	      
 	      const GeomDetUnit* geomDetUnit_2xcluster(tkGeom->idToDetUnit(coincidenceId));
 	      
@@ -759,51 +754,51 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 	      std::set<unsigned int> intersection;
 	      bool areSame = areSameSimTrackId(simTrackId, coincidencesimTrackId, intersection);
 	      
-	     
+	      
 	      
 	      double delta_X = - globalPosClu.x() + theglobalPosClu.x();
 	      double delta_Y = - globalPosClu.y() + theglobalPosClu.y();
-	        
+	      
 	      
 	      m_trackerLayout2xZR->Fill(globalPosClu.z(), globalPosClu.perp());
 	      m_trackerLayout2xYX->Fill(globalPosClu.x(), globalPosClu.y());
 	      
 	      
 	      
-	     }
 	    }
 	  }
-	  
-
-	  
 	}
+	  
+	
+	
+      }
     }
   }
-
-	  //----------------------------------------- 	    
-       // End of cluster loop
-//end of module loop
-
-
+  
+  //----------------------------------------- 	    
+  // End of cluster loop
+  //end of module loop
+  
+  
 //ok, now I know the number of clusters/hits per ring per disk and should fill the histogram once for this event
-for (unsigned int i = 0; i < 8; i++) {  // TEPX
-  //loop the disks
-  for (unsigned int j = 0; j < 5; j++) {
-    //and the rings
-    m_diskHistosCluster[i]->Fill(j + 1, cluCounter[i][j]);
+  for (unsigned int i = 0; i < 8; i++) {  // TEPX
+    //loop the disks
+    for (unsigned int j = 0; j < 5; j++) {
+      //and the rings
+      m_diskHistosCluster[i]->Fill(j + 1, cluCounter[i][j]);
     //  m_diskHistosHits[i]->Fill(j + 1, hitCounter[i][j]);
-    if (m_docoincidence) {
-      m_diskHistos2x[i]->Fill(j + 1, x2Counter[i][j]);
-      m_diskHistos2xreal[i]->Fill(j + 1, x2Counterreal[i][j]);
-      m_diskHistos2xInR[i]->Fill(j + 1, x2CounterInR[i][j]);
-      m_diskHistos2xrealInR[i]->Fill(j + 1, x2CounterrealInR[i][j]);
-      
+      if (m_docoincidence) {
+	m_diskHistos2x[i]->Fill(j + 1, x2Counter[i][j]);
+	m_diskHistos2xreal[i]->Fill(j + 1, x2Counterreal[i][j]);
+	m_diskHistos2xInR[i]->Fill(j + 1, x2CounterInR[i][j]);
+	m_diskHistos2xrealInR[i]->Fill(j + 1, x2CounterrealInR[i][j]);
+	
+      }
     }
-  }
  }
- 
- m_nevents++;
- 
+  
+  m_nevents++;
+  
 }
 
 
@@ -830,13 +825,13 @@ void Ashish2xCoincidence::endJob() {
     //        << "\% true double coincidences in TEPX Ring 4 modules." << std::endl;
     //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring4 / (double)m_total2xcoincidences_ring4 * 100
     //        << "\% fake double coincidences in TEPX Ring 4 modules." << std::endl;
-
+    
     //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring5 / (double)m_total2xcoincidences_ring5 * 100
     //         << "\% true double coincidences in TEPX Ring 5 modules." << std::endl;
     //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring5 / (double)m_total2xcoincidences_ring5 * 100
     //        << "\% fake double coincidences in TEPX Ring 5 modules." << std::endl;
-
-
+    
+    
   }
 }
 
@@ -848,7 +843,7 @@ void Ashish2xCoincidence::fillDescriptions(edm::ConfigurationDescriptions& descr
   edm::ParameterSetDescription desc;
   desc.setUnknown();
   descriptions.addDefault(desc);
-
+  
   //Specify that only 'tracks' is allowed
   //To use, remove the default given above and uncomment below
   //ParameterSetDescription desc;
@@ -887,12 +882,12 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       newmodule = 1;
     else if (thering == 2 && themodule == 28)
       newmodule = 1;
-      else if (thering == 3 && themodule == 36)
-	newmodule = 1;
-      else if (thering == 4 && themodule == 44)
-	newmodule = 1;
-      else if (thering == 5 && themodule == 48)
-	newmodule = 1;
+    else if (thering == 3 && themodule == 36)
+      newmodule = 1;
+    else if (thering == 4 && themodule == 44)
+      newmodule = 1;
+    else if (thering == 5 && themodule == 48)
+      newmodule = 1;
   }
   
   if(isTEPX){
@@ -939,7 +934,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
   //std::pair<float,float> phiSpan_new = geomDetUnit_new->surface().phiSpan();                                                            
   //std::pair<float,float> zSpan_new = geomDetUnit_new->surface().zSpan();                                                                 
   //std::pair<float,float> rSpan_new = geomDetUnit_new->surface().rSpan();
- 
+  
  
   unsigned int nClu = 0;
   //at the end of the day, need to find the closest coincidence hit, so store the minimum 2D distance in a temporary variable and a vector for all values
@@ -954,7 +949,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
   //make the return value end();
   //found2xcoincidencecluster = theit->end();
   //found2xcoincidencecluster = theit1->end();
-
+  
   
   for (edmNew::DetSet<SiPixelCluster>::const_iterator cluit = theit->begin(); cluit != theit->end(); cluit++) {
     
@@ -963,7 +958,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
     Local3DPoint localPosClu = geomDetUnit->topology().localPosition(mpClu);
     Global3DPoint globalPosClu = geomDetUnit->surface().toGlobal(localPosClu);
 
-
+    
     edm::DetSetVector<PixelDigiSimLink>::const_iterator simLinkDSViter = findSimLinkDetSet(rawid);
     std::set<unsigned int> simTrackId = this->getSimTrackId(simLinkDSViter, cluit, false);
     //now get the simlink detset based on the coincidence hit detid                                                                             
@@ -971,7 +966,7 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
     std::set<unsigned int> coincidencesimTrackId = this->getSimTrackId(simLinkDSViter, found2xcoincidencecluster, false);
     std::set<unsigned int> intersection;
     bool areSame = areSameSimTrackId(simTrackId, coincidencesimTrackId, intersection);
-
+    
     
     
     double dr = sqrt(pow(theglobalPosClu.x(), 2) + pow(theglobalPosClu.y(), 2)) - sqrt(pow(globalPosClu.x(), 2) + pow(globalPosClu.y(), 2));
