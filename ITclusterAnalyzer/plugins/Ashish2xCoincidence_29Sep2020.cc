@@ -731,11 +731,11 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 	    unsigned int coincidenceId;
 	    const SiPixelCluster* found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu, true, coincidenceId);
 	    if (found2xcoincidencecluster) {
-	      m_total2xcoincidences_ring1++;
-	      m_total2xcoincidences_ring2++;
-	      m_total2xcoincidences_ring3++;
-	      m_total2xcoincidences_ring4++;
-	      m_total2xcoincidences_ring5++;
+	      // m_total2xcoincidences_ring1++;
+	      //m_total2xcoincidences_ring2++;
+	      //m_total2xcoincidences_ring3++;
+	      //m_total2xcoincidences_ring4++;
+	      //m_total2xcoincidences_ring5++;
 	      
 	      x2Counter[hist_id][ring_id]++;
 
@@ -811,34 +811,32 @@ for (unsigned int i = 0; i < 8; i++) {  // TEPX
 void Ashish2xCoincidence::endJob() {
   std::cout << "IT cluster Analyzer processed " << m_nevents << " events!" << std::endl;
   if (m_docoincidence) {
-    std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100 
-	      << "\% true double coincidences in TEPX Ring 1 modules." << std::endl;
-    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100
-              << "\% fake double coincidences in TEPX Ring 1 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100 
+    //	      << "\% true double coincidences in TEPX Ring 1 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100
+    //        << "\% fake double coincidences in TEPX Ring 1 modules." << std::endl;
     
-    std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring2 / (double)m_total2xcoincidences_ring2 * 100
-              << "\% true double coincidences in TEPX Ring 2 modules." << std::endl;
-    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring2 / (double)m_total2xcoincidences_ring2 * 100
-              << "\% fake double coincidences in TEPX  Ring 2 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring2 / (double)m_total2xcoincidences_ring2 * 100
+    //        << "\% true double coincidences in TEPX Ring 2 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring2 / (double)m_total2xcoincidences_ring2 * 100
+    //        << "\% fake double coincidences in TEPX  Ring 2 modules." << std::endl;
     
-    std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring3 / (double)m_total2xcoincidences_ring3 * 100
-              << "\% true double coincidences in TEPX Ring 3 modules." << std::endl;
-    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring3 / (double)m_total2xcoincidences_ring3 * 100
-              << "\% fake double coincidences in TEPX Ring 3 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring3 / (double)m_total2xcoincidences_ring3 * 100
+    //        << "\% true double coincidences in TEPX Ring 3 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring3 / (double)m_total2xcoincidences_ring3 * 100
+    //        << "\% fake double coincidences in TEPX Ring 3 modules." << std::endl;
     
-    std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring4 / (double)m_total2xcoincidences_ring4 * 100
-              << "\% true double coincidences in TEPX Ring 4 modules." << std::endl;
-    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring4 / (double)m_total2xcoincidences_ring4 * 100
-              << "\% fake double coincidences in TEPX Ring 4 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring4 / (double)m_total2xcoincidences_ring4 * 100
+    //        << "\% true double coincidences in TEPX Ring 4 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring4 / (double)m_total2xcoincidences_ring4 * 100
+    //        << "\% fake double coincidences in TEPX Ring 4 modules." << std::endl;
 
-    std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring5 / (double)m_total2xcoincidences_ring5 * 100
-              << "\% true double coincidences in TEPX Ring 5 modules." << std::endl;
-    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring5 / (double)m_total2xcoincidences_ring5 * 100
-              << "\% fake double coincidences in TEPX Ring 5 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring5 / (double)m_total2xcoincidences_ring5 * 100
+    //         << "\% true double coincidences in TEPX Ring 5 modules." << std::endl;
+    //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring5 / (double)m_total2xcoincidences_ring5 * 100
+    //        << "\% fake double coincidences in TEPX Ring 5 modules." << std::endl;
 
 
-    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidencesInR / (double)m_total2xcoincidencesInR * 100
-	      << "\% fake double coincidences in R in TEPX modules." << std::endl;
   }
 }
 
