@@ -735,29 +735,29 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 	      x2Counter[hist_id][ring_id]++;
 	      
 	      
-	      const GeomDetUnit* geomDetUnit_2xcluster(tkGeom->idToDetUnit(coincidenceId));
+	      //const GeomDetUnit* geomDetUnit_2xcluster(tkGeom->idToDetUnit(coincidenceId));
 	      
 	      
-	      MeasurementPoint mpcoincidenceClu(found2xcoincidencecluster->x(), found2xcoincidencecluster->y());
-	      Local3DPoint thelocalPosClu = geomDetUnit_2xcluster->topology().localPosition(mpcoincidenceClu);
-	      Global3DPoint theglobalPosClu = geomDetUnit_2xcluster->surface().toGlobal(thelocalPosClu);
+	      //MeasurementPoint mpcoincidenceClu(found2xcoincidencecluster->x(), found2xcoincidencecluster->y());
+	      //Local3DPoint thelocalPosClu = geomDetUnit_2xcluster->topology().localPosition(mpcoincidenceClu);
+	      //Global3DPoint theglobalPosClu = geomDetUnit_2xcluster->surface().toGlobal(thelocalPosClu);
 	      
 	      //std::cout << " " << theglobalPosClu.x() << "  " << theglobalPosClu.y() << std::endl;
 	      
 	      
 	      //now get the simlink detset
-	      edm::DetSetVector<PixelDigiSimLink>::const_iterator simLinkDSViter = findSimLinkDetSet(rawid);
-	      std::set<unsigned int> simTrackId = this->getSimTrackId(simLinkDSViter, cluit, false);
+	      //edm::DetSetVector<PixelDigiSimLink>::const_iterator simLinkDSViter = findSimLinkDetSet(rawid);
+	      //std::set<unsigned int> simTrackId = this->getSimTrackId(simLinkDSViter, cluit, false);
 	      //now get the simlink detset based on the coincidence hit detid
-	      simLinkDSViter = findSimLinkDetSet(coincidenceId);
-	      std::set<unsigned int> coincidencesimTrackId = this->getSimTrackId(simLinkDSViter, found2xcoincidencecluster, false);
-	      std::set<unsigned int> intersection;
-	      bool areSame = areSameSimTrackId(simTrackId, coincidencesimTrackId, intersection);
+	      //simLinkDSViter = findSimLinkDetSet(coincidenceId);
+	      //std::set<unsigned int> coincidencesimTrackId = this->getSimTrackId(simLinkDSViter, found2xcoincidencecluster, false);
+	      //std::set<unsigned int> intersection;
+	      //bool areSame = areSameSimTrackId(simTrackId, coincidencesimTrackId, intersection);
 	      
 	      
 	      
-	      double delta_X = - globalPosClu.x() + theglobalPosClu.x();
-	      double delta_Y = - globalPosClu.y() + theglobalPosClu.y();
+	      //double delta_X = - globalPosClu.x() + theglobalPosClu.x();
+	      //double delta_Y = - globalPosClu.y() + theglobalPosClu.y();
 	      
 	      
 	      m_trackerLayout2xZR->Fill(globalPosClu.z(), globalPosClu.perp());
