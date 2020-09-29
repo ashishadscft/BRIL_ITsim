@@ -980,8 +980,8 @@ const SiPixelCluster* Ashish2xCoincidence::findCoincidence2x(DetId thedetid, Glo
       
       nClu++;
       
-      double delta_X = fabs(globalPosClu.x() - theglobalPosClu.x());
-      double delta_Y = fabs(globalPosClu.y() - theglobalPosClu.y());
+      double delta_X = - globalPosClu.x() + theglobalPosClu.x();
+      double delta_Y = - globalPosClu.y() + theglobalPosClu.y();
       
       double x_1 = theglobalPosClu.x();
       double x_2 = globalPosClu.x();
