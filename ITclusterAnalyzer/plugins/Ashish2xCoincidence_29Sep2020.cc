@@ -520,7 +520,8 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 	    unsigned int coincidenceId;
 	    const SiPixelCluster* found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu, true, coincidenceId);
 	    if (found2xcoincidencecluster) {
-	      
+
+	      m_true2xcoincidences_ring1++;  
 	      x2Counter[hist_id][ring_id]++;
 	      
 	      
@@ -570,10 +571,10 @@ void Ashish2xCoincidence::analyze(const edm::Event& iEvent, const edm::EventSetu
 void Ashish2xCoincidence::endJob() {
   std::cout << "IT cluster Analyzer processed " << m_nevents << " events!" << std::endl;
   if (m_docoincidence) {
-    //std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100 
-    //	      << "\% true double coincidences in TEPX Ring 1 modules." << std::endl;
-    //std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100
-    //        << "\% fake double coincidences in TEPX Ring 1 modules." << std::endl;
+    std::cout << "IT cluster Analyzer found " << m_true2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100 
+    	      << "\% true double coincidences in TEPX Ring 1 modules." << std::endl;
+    std::cout << "IT cluster Analyzer found " << m_fake2xcoincidences_ring1 / (double)m_total2xcoincidences_ring1 * 100
+            << "\% fake double coincidences in TEPX Ring 1 modules." << std::endl;
     
     
     
