@@ -306,24 +306,14 @@ Ashish2xCoincidence::Ashish2xCoincidence(const edm::ParameterSet& iConfig)
   //now do what ever initialization is needed
   m_nevents = 0;
   m_total2xcoincidences_ring1 = 0;
-  m_total2xcoincidences_ring2 = 0;
-  m_total2xcoincidences_ring3 = 0;
-  m_total2xcoincidences_ring4 = 0;
-  m_total2xcoincidences_ring5 = 0;
+  
   
   m_total2xcoincidencesInR = 0;
   
   m_fake2xcoincidences_ring1 = 0;
-  m_fake2xcoincidences_ring2 = 0;
-  m_fake2xcoincidences_ring3 = 0;
-  m_fake2xcoincidences_ring4 = 0;
-  m_fake2xcoincidences_ring5 = 0;
+ 
   
   m_true2xcoincidences_ring1 = 0;
-  m_true2xcoincidences_ring2 = 0;
-  m_true2xcoincidences_ring3 = 0;
-  m_true2xcoincidences_ring4 = 0;
-  m_true2xcoincidences_ring5 = 0;
   
   m_fake2xcoincidencesInR = 0;
   
