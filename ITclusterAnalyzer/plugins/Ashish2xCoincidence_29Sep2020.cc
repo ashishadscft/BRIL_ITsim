@@ -230,14 +230,6 @@ private:
   double m_dz;
   double m_dr_ring1;
   double m_dphi_ring1;
-  double m_dr_ring2;
-  double m_dphi_ring2;
-  double m_dr_ring3;
-  double m_dphi_ring3;
-  double m_dr_ring4;
-  double m_dphi_ring4;
-  double m_dr_ring5;
-  double m_dphi_ring5;
   
   
   //event counter
@@ -245,24 +237,14 @@ private:
   
   //coincidence counter
   uint32_t m_total2xcoincidences_ring1;
-  uint32_t m_total2xcoincidences_ring2;
-  uint32_t m_total2xcoincidences_ring3;
-  uint32_t m_total2xcoincidences_ring4;
-  uint32_t m_total2xcoincidences_ring5;
+  
   
   uint32_t m_total2xcoincidencesInR;
   
   uint32_t m_true2xcoincidences_ring1;
-  uint32_t m_true2xcoincidences_ring2;
-  uint32_t m_true2xcoincidences_ring3;
-  uint32_t m_true2xcoincidences_ring4;
-  uint32_t m_true2xcoincidences_ring5;
+  
   
   uint32_t m_fake2xcoincidences_ring1;
-  uint32_t m_fake2xcoincidences_ring2;
-  uint32_t m_fake2xcoincidences_ring3;
-  uint32_t m_fake2xcoincidences_ring4;
-  uint32_t m_fake2xcoincidences_ring5;
   
   uint32_t m_fake2xcoincidencesInR;
   
@@ -291,15 +273,7 @@ Ashish2xCoincidence::Ashish2xCoincidence(const edm::ParameterSet& iConfig)
   , m_dy(iConfig.getParameter<double>("dy_cut"))
   , m_dz(iConfig.getParameter<double>("dz_cut")) 
   , m_dr_ring1(iConfig.getParameter<double>("dr_cut_ring1"))
-  , m_dphi_ring1(iConfig.getParameter<double>("dphi_cut_ring1"))
-  , m_dr_ring2(iConfig.getParameter<double>("dr_cut_ring2"))
-  , m_dphi_ring2(iConfig.getParameter<double>("dphi_cut_ring2"))
-  , m_dr_ring3(iConfig.getParameter<double>("dr_cut_ring3"))
-  , m_dphi_ring3(iConfig.getParameter<double>("dphi_cut_ring3"))
-  , m_dr_ring4(iConfig.getParameter<double>("dr_cut_ring4"))
-  , m_dphi_ring4(iConfig.getParameter<double>("dphi_cut_ring4"))
-  , m_dr_ring5(iConfig.getParameter<double>("dr_cut_ring5"))
-  , m_dphi_ring5(iConfig.getParameter<double>("dphi_cut_ring5")){
+  , m_dphi_ring1(iConfig.getParameter<double>("dphi_cut_ring1")) {
   
   
   
