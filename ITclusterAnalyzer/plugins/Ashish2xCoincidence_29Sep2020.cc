@@ -184,66 +184,15 @@ private:
   TH2F* m_trackerLayout2xZR_InR;
   TH2F* m_trackerLayout2xYX_InR;
   
-  //Residual histograms for all rings
-  TH1F* m_residualX[5];
-  TH1F* m_residualX_sametrack[5];
-  TH1F* m_residualX_notsametrack[5];
   
-  TH1F* m_residualY[5];
-  TH1F* m_residualY_sametrack[5];
-  TH1F* m_residualY_notsametrack[5];
-  
-  TH1F* m_residualR[5];
-  TH1F* m_residualR_sametrack[5];
-  TH1F* m_residualR_notsametrack[5];
-  
-  TH1F* m_residualR1[5];
-  TH1F* m_residualR1_sametrack[5];
-  TH1F* m_residualR1_notsametrack[5];
-  
-  
-  TH1F* m_deltaphi[5];
-  TH1F* m_deltaphi_sametrack[5];
-  TH1F* m_deltaphi_notsametrack[5];
-  
-  
-  
-  
+ 
   //simple residual histograms for the cuts
   TH1F* m_residualX_Ring1;
   TH1F* m_residualY_Ring1;
   TH1F* m_residualR_Ring1;
   TH1F* m_residualR1_Ring1;
   TH1F* m_deltaphi_Ring1;
-  
-  
-  TH1F* m_residualX_Ring2;
-  TH1F* m_residualY_Ring2;
-  TH1F* m_residualR_Ring2;
-  TH1F* m_residualR1_Ring2;
-  TH1F* m_deltaphi_Ring2;
-
-
-  TH1F* m_residualX_Ring3;
-  TH1F* m_residualY_Ring3;
-  TH1F* m_residualR_Ring3;
-  TH1F* m_residualR1_Ring3;
-  TH1F* m_deltaphi_Ring3;
-
-  TH1F* m_residualX_Ring4;
-  TH1F* m_residualY_Ring4;
-  TH1F* m_residualR_Ring4;
-  TH1F* m_residualR1_Ring4;
-  TH1F* m_deltaphi_Ring4;
-  
-  
-  TH1F* m_residualX_Ring5;
-  TH1F* m_residualY_Ring5;
-  TH1F* m_residualR_Ring5;
-  TH1F* m_residualR1_Ring5;
-  TH1F* m_deltaphi_Ring5;
-  
-  
+   
   
   TH1F* m_residualX_Ring1_sametrack;
   TH1F* m_residualY_Ring1_sametrack;
@@ -252,29 +201,7 @@ private:
   TH1F* m_deltaphi_Ring1_sametrack;
   
 
-  TH1F* m_residualX_Ring2_sametrack;
-  TH1F* m_residualY_Ring2_sametrack;
-  TH1F* m_residualR_Ring2_sametrack;
-  TH1F* m_residualR1_Ring2_sametrack;
-  TH1F* m_deltaphi_Ring2_sametrack;
   
-  TH1F* m_residualX_Ring3_sametrack;
-  TH1F* m_residualY_Ring3_sametrack;
-  TH1F* m_residualR_Ring3_sametrack;
-  TH1F* m_residualR1_Ring3_sametrack;
-  TH1F* m_deltaphi_Ring3_sametrack;
-  
-  TH1F* m_residualX_Ring4_sametrack;
-  TH1F* m_residualY_Ring4_sametrack;
-  TH1F* m_residualR_Ring4_sametrack;
-  TH1F* m_residualR1_Ring4_sametrack;
-  TH1F* m_deltaphi_Ring4_sametrack;
-  
-  TH1F* m_residualX_Ring5_sametrack;
-  TH1F* m_residualY_Ring5_sametrack;
-  TH1F* m_residualR_Ring5_sametrack;
-  TH1F* m_residualR1_Ring5_sametrack;
-  TH1F* m_deltaphi_Ring5_sametrack;
   
   TH1F* m_residualX_Ring1_notsametrack;
   TH1F* m_residualY_Ring1_notsametrack;
@@ -282,29 +209,7 @@ private:
   TH1F* m_residualR1_Ring1_notsametrack;
   TH1F* m_deltaphi_Ring1_notsametrack;
   
-  TH1F* m_residualX_Ring2_notsametrack;
-  TH1F* m_residualY_Ring2_notsametrack;
-  TH1F* m_residualR_Ring2_notsametrack;
-  TH1F* m_residualR1_Ring2_notsametrack;
-  TH1F* m_deltaphi_Ring2_notsametrack;
-
-  TH1F* m_residualX_Ring3_notsametrack;
-  TH1F* m_residualY_Ring3_notsametrack;
-  TH1F* m_residualR_Ring3_notsametrack;
-  TH1F* m_residualR1_Ring3_notsametrack;
-  TH1F* m_deltaphi_Ring3_notsametrack;
   
-  TH1F* m_residualX_Ring4_notsametrack;
-  TH1F* m_residualY_Ring4_notsametrack;
-  TH1F* m_residualR_Ring4_notsametrack;
-  TH1F* m_residualR1_Ring4_notsametrack;
-  TH1F* m_deltaphi_Ring4_notsametrack;
-  
-  TH1F* m_residualX_Ring5_notsametrack;
-  TH1F* m_residualY_Ring5_notsametrack;
-  TH1F* m_residualR_Ring5_notsametrack;
-  TH1F* m_residualR1_Ring5_notsametrack;
-  TH1F* m_deltaphi_Ring5_notsametrack;
   
   
   TH1F* m_residualX_InR;
@@ -466,84 +371,6 @@ void Ashish2xCoincidence::beginJob() {
   
   
    
-  m_residualX_Ring2 = td.make<TH1F>("ResidualsX_Ring2", "ResidualsX_Ring2;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring2 = td.make<TH1F>("ResidualsY_Ring2", "ResidualsY_Ring2;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring2 = td.make<TH1F>("ResidualsR_Ring2", "ResidualsR_Ring2;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring2 = td.make<TH1F>("ResidualsR1_Ring2", "ResidualsR1_Ring2;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring2 = td.make<TH1F>("Deltaphi_Ring2", "Deltaphi_Ring2;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring2_sametrack = td.make<TH1F>("ResidualsX_Ring2_sametrack", "ResidualsX_Ring2_sametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring2_sametrack = td.make<TH1F>("ResidualsY_Ring2_sametrack", "ResidualsY_Ring2_sametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring2_sametrack = td.make<TH1F>("ResidualsR_Ring2_sametrack", "ResidualsR_Ring2_sametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring2_sametrack = td.make<TH1F>("ResidualsR1_Ring2_sametrack", "ResidualsR1_Ring2_sametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring2_sametrack = td.make<TH1F>("Deltaphi_Ring2_sametrack", "Deltaphi_Ring2_sametrack;phi2-phi1;counts", 1000, -1, 1);
-  
-
-  m_residualX_Ring2_notsametrack = td.make<TH1F>("ResidualsX_Ring2_notsametrack", "ResidualsX_Ring2_notsametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring2_notsametrack = td.make<TH1F>("ResidualsY_Ring2_notsametrack", "ResidualsY_Ring2_notsametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring2_notsametrack = td.make<TH1F>("ResidualsR_Ring2_notsametrack", "ResidualsR_Ring2_notsametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring2_notsametrack = td.make<TH1F>("ResidualsR1_Ring2_notsametrack", "ResidualsR1_Ring2_notsametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring2_notsametrack = td.make<TH1F>("Deltaphi_Ring2_notsametrack", "Deltaphi_Ring2_notsametrack;phi2-phi1;counts", 1000, -1, 1);
-      
-  
-  m_residualX_Ring3 = td.make<TH1F>("ResidualsX_Ring3", "ResidualsX_Ring3;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring3 = td.make<TH1F>("ResidualsY_Ring3", "ResidualsY_Ring3;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring3 = td.make<TH1F>("ResidualsR_Ring3", "ResidualsR_Ring3;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring3 = td.make<TH1F>("ResidualsR1_Ring3", "ResidualsR1_Ring3;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring3 = td.make<TH1F>("Deltaphi_Ring3", "Deltaphi_Ring3;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring3_sametrack = td.make<TH1F>("ResidualsX_Ring3_sametrack", "ResidualsX_Ring3_sametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring3_sametrack = td.make<TH1F>("ResidualsY_Ring3_sametrack", "ResidualsY_Ring3_sametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring3_sametrack = td.make<TH1F>("ResidualsR_Ring3_sametrack", "ResidualsR_Ring3_sametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring3_sametrack = td.make<TH1F>("ResidualsR1_Ring3_sametrack", "ResidualsR1_Ring3_sametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring3_sametrack = td.make<TH1F>("Deltaphi_Ring3_sametrack", "Deltaphi_Ring3_sametrack;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring3_notsametrack = td.make<TH1F>("ResidualsX_Ring3_notsametrack", "ResidualsX_Ring3_notsametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring3_notsametrack = td.make<TH1F>("ResidualsY_Ring3_notsametrack", "ResidualsY_Ring3_notsametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring3_notsametrack = td.make<TH1F>("ResidualsR_Ring3_notsametrack", "ResidualsR_Ring3_notsametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring3_notsametrack = td.make<TH1F>("ResidualsR1_Ring3_notsametrack", "ResidualsR1_Ring3_notsametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring3_notsametrack = td.make<TH1F>("Deltaphi_Ring3_notsametrack", "Deltaphi_Ring3_notsametrack;phi2-phi1;counts", 1000, -1, 1);
-  
-  
-  
-  m_residualX_Ring4 = td.make<TH1F>("ResidualsX_Ring4", "ResidualsX_Ring4;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring4 = td.make<TH1F>("ResidualsY_Ring4", "ResidualsY_Ring4;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring4 = td.make<TH1F>("ResidualsR_Ring4", "ResidualsR_Ring4;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring4 = td.make<TH1F>("ResidualsR1_Ring4", "ResidualsR1_Ring4;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring4 = td.make<TH1F>("Deltaphi_Ring4", "Deltaphi_Ring4;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring4_sametrack = td.make<TH1F>("ResidualsX_Ring4_sametrack", "ResidualsX_Ring4_sametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring4_sametrack = td.make<TH1F>("ResidualsY_Ring4_sametrack", "ResidualsY_Ring4_sametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring4_sametrack = td.make<TH1F>("ResidualsR_Ring4_sametrack", "ResidualsR_Ring4_sametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring4_sametrack = td.make<TH1F>("ResidualsR1_Ring4_sametrack", "ResidualsR1_Ring4_sametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring4_sametrack = td.make<TH1F>("Deltaphi_Ring4_sametrack", "Deltaphi_Ring4_sametrack;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring4_notsametrack = td.make<TH1F>("ResidualsX_Ring4_notsametrack", "ResidualsX_Ring4_notsametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring4_notsametrack = td.make<TH1F>("ResidualsY_Ring4_notsametrack", "ResidualsY_Ring4_notsametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring4_notsametrack = td.make<TH1F>("ResidualsR_Ring4_notsametrack", "ResidualsR_Ring4_notsametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring4_notsametrack = td.make<TH1F>("ResidualsR1_Ring4_notsametrack", "ResidualsR1_Ring4_notsametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring4_notsametrack = td.make<TH1F>("Deltaphi_Ring4_notsametrack", "Deltaphi_Ring4_notsametrack;phi2-phi1;counts", 1000, -1, 1);
-  
-  
-  m_residualX_Ring5 = td.make<TH1F>("ResidualsX_Ring5", "ResidualsX_Ring5;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring5 = td.make<TH1F>("ResidualsY_Ring5", "ResidualsY_Ring5;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring5 = td.make<TH1F>("ResidualsR_Ring5", "ResidualsR_Ring5;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring5 = td.make<TH1F>("ResidualsR1_Ring5", "ResidualsR1_Ring5;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring5 = td.make<TH1F>("Deltaphi_Ring5", "Deltaphi_Ring5;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring5_sametrack = td.make<TH1F>("ResidualsX_Ring5_sametrack", "ResidualsX_Ring5_sametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring5_sametrack = td.make<TH1F>("ResidualsY_Ring5_sametrack", "ResidualsY_Ring5_sametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring5_sametrack = td.make<TH1F>("ResidualsR_Ring5_sametrack", "ResidualsR_Ring5_sametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring5_sametrack = td.make<TH1F>("ResidualsR1_Ring5_sametrack", "ResidualsR1_Ring5_sametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring5_sametrack = td.make<TH1F>("Deltaphi_Ring5_sametrack", "Deltaphi_Ring5_sametrack;phi2-phi1;counts", 1000, -1, 1);
-  
-  m_residualX_Ring5_notsametrack = td.make<TH1F>("ResidualsX_Ring5_notsametrack", "ResidualsX_Ring5_notsametrack;x2-x1 (cm);counts", 1000, -1, 1);
-  m_residualY_Ring5_notsametrack = td.make<TH1F>("ResidualsY_Ring5_notsametrack", "ResidualsY_Ring5_notsametrack;y2-y1 (cm);counts", 1000, -1, 1);
-  m_residualR_Ring5_notsametrack = td.make<TH1F>("ResidualsR_Ring5_notsametrack", "ResidualsR_Ring5_notsametrack;deltaR (cm);counts", 1000, 0, 1);
-  m_residualR1_Ring5_notsametrack = td.make<TH1F>("ResidualsR1_Ring5_notsametrack", "ResidualsR1_Ring5_notsametrack;r2-r1 (cm);counts", 1000, -1, 1);
-  m_deltaphi_Ring5_notsametrack = td.make<TH1F>("Deltaphi_Ring5_notsametrack", "Deltaphi_Ring5_notsametrack;phi2-phi1;counts", 1000, -1, 1);    
-  
-  
   
   
   m_residualX_InR = td.make<TH1F>("ResidualsXInR", "ResidualsX;deltaX (cm);counts", 1000, -1, 1);
