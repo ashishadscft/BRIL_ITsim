@@ -113,15 +113,15 @@ private:
   //array of TH2F for 2xcoinc per disk per ring
   //first all coincidences
   TH2F* m_diskHistos2x[2][4];
-  TH2F* m_diskHistos2xInR[8];
+
   //and the real ones
   TH2F* m_diskHistos2xreal[2][4];
-  TH2F* m_diskHistos2xrealInR[8];
   
   //tracker maps for 2xcoinc
   TH2F* m_trackerLayout2xZR;
   TH2F* m_trackerLayout2xYX;
   
+
   //simple residual histograms for the cuts
   TH1F* m_dX[2][4][5];
   TH1F* m_dY[2][4][5];
@@ -157,20 +157,20 @@ private:
   const float C2 = 0.15;
   
   float m_dr_cuts[2][4][5] = {{
-      {1,1,1,1,1},           //Disk -4 
-      {1,1,1,1,1},           //Disk -3
-      {1,1,1,1,1},           //Disk -2 
-      {1,1,1,1,1}},          //Disk -1
-			      {{1,1,1,1,1},           //Disk 1
+                               {1,1,1,1,1},           //Disk -4 
+                               {1,1,1,1,1},           //Disk -3
+                               {1,1,1,1,1},           //Disk -2 
+                               {1,1,1,1,1}},          //Disk -1
+			       {{1,1,1,1,1},           //Disk 1
 			       {1,1,1,1,1},           //Disk 2 
 			       {1,1,1,1,1},           //Disk 3
 			       {1,1,1,1,1}}};         //Disk 4
   
   float m_dphi_cuts[2][4][5] = {{
-      {1,1,1,1,1},          //Disk -4
-      {1,1,1,1,1},          //Disk -3
-      {1,1,1,1,1},          //Disk -2
-      {1,1,1,1,1}},         //Disk -1
+                                {1,1,1,1,1},          //Disk -4
+                                {1,1,1,1,1},          //Disk -3
+                                {1,1,1,1,1},          //Disk -2
+                                {1,1,1,1,1}},         //Disk -1
 				{{1,1,1,1,1},          //Disk 1
 				 {1,1,1,1,1},          //Disk 2
 				 {1,1,1,1,1},          //Disk 3 
@@ -249,17 +249,17 @@ void ITclusterAnalyzerCoincidences::beginJob() {
       unsigned int side = k + 1;
       
       std::stringstream histoname;
-      histoname << "Number of clusters for side_ " << side <<"_Disk" << disk << ";Ring;# of Clusters per event";
-      std::stringstream histotitle;
-      histotitle << "Number of clusters for side_" << side << "_Disk" << disk;
+      histoname << "Numberofclusters_side_" << side <<"_Disk" << disk << ";Ring;#ofClustersperevent";
+      
+      
       //name, name, nbinX, Xlow, Xhigh, nbinY, Ylow, Yhigh
-      m_diskHistosCluster[k][i] = td.make<TH2F>(histotitle.str().c_str(), histoname.str().c_str(), 5, .5, 5.5, m_maxBin, 0, m_maxBin);
+      m_diskHistosCluster[k][i] = td.make<TH2F>(histoname.str().c_str()," ", 5, .5, 5.5, m_maxBin, 0, m_maxBin);
       
     }  
   }
   
-  m_trackerLayoutClustersZR = td.make<TH2F>("RVsZ", "R vs. z position", 6000, -300.0, 300.0, 600, 0.0, 30.0);
-  m_trackerLayoutClustersYX = td.make<TH2F>("XVsY", "x vs. y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
+  m_trackerLayoutClustersZR = td.make<TH2F>("RVsZ", "RVsZposition", 6000, -300.0, 300.0, 600, 0.0, 30.0);
+  m_trackerLayoutClustersYX = td.make<TH2F>("XVsY", "XVsYposition", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
   
   
   
@@ -275,25 +275,23 @@ void ITclusterAnalyzerCoincidences::beginJob() {
 	int side = k + 1;
 	
 	std::stringstream histoname;
-	histoname << "Number of 2x Coincidences for side_" << side << "_Disk" << disk << ";Ring;# of coincidences per event";
-	std::stringstream histotitle;
-	histotitle << "Number of 2x Coincidences for side_" << side << "_Disk" << disk;
-	//name, name, nbinX, Xlow, Xhigh, nbinY, Ylow, Yhigh
-	m_diskHistos2x[k][i] = td.make<TH2F>(histotitle.str().c_str(), histoname.str().c_str(), 5, .5, 5.5, m_maxBin, 0, m_maxBin);
+	histoname << "Numberof2xCoincidences_side_" << side << "_Disk" << disk << ";Ring;#ofcoincidencesperevent";
 	
-	std::stringstream histonamereal;
-	histonamereal << "Number of real 2x Coincidences for side_" << side << "_Disk" << disk << ";Ring;# of real coincidences per event";
-	std::stringstream histotitlereal;
-	histotitlereal << "Number of real 2x Coincidences for side_" << side << "_Disk" << disk;
 	//name, name, nbinX, Xlow, Xhigh, nbinY, Ylow, Yhigh
-	m_diskHistos2xreal[k][i] = td.make<TH2F>(histotitlereal.str().c_str(), histonamereal.str().c_str(), 5, .5, 5.5, m_maxBin, 0, m_maxBin);
+	m_diskHistos2x[k][i] = td.make<TH2F>(histoname.str().c_str()," ",  5, .5, 5.5, m_maxBin, 0, m_maxBin);
+	histoname.str("");
 	
+	histoname << "Number_of_real_2xCoincidences_side_" << side << "_Disk" << disk << ";Ring;#ofrealcoincidencesperevent";
+	
+	//name, name, nbinX, Xlow, Xhigh, nbinY, Ylow, Yhigh
+	m_diskHistos2xreal[k][i] = td.make<TH2F>(histoname.str().c_str()," ", 5, .5, 5.5, m_maxBin, 0, m_maxBin);
+	histoname.str("");
 	
       }
     }
     
-    m_trackerLayout2xZR = td.make<TH2F>("2x Coincidences RVsZ", "R vs. z position", 6000, -300.0, 300.0, 600, 0.0, 30.0);
-    m_trackerLayout2xYX = td.make<TH2F>("2x Coincidences XVsY", "X vs. Y position", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
+    m_trackerLayout2xZR = td.make<TH2F>("2xCoincidences_RVsZ", "RvsZposition", 6000, -300.0, 300.0, 600, 0.0, 30.0);
+    m_trackerLayout2xYX = td.make<TH2F>("2xCoincidences_XVsY", "XvsYposition", 1000, -50.0, 50.0, 1000, -50.0, 50.0);
     
     
     for (unsigned int k = 0; k < 2; k++) {
@@ -306,87 +304,94 @@ void ITclusterAnalyzerCoincidences::beginJob() {
 	  
 	  std::stringstream histoname;
 	  histoname << "m_dX_side" << side <<"_Disk"<< disk  << "_Ring" << ring;
-	  m_dX[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -1, 1);
+	  m_dX[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dY_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dY[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 1000, -1, 1);
+	  m_dY[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dR_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dR[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, 0, 1);
+	  m_dR[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, 0, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dr_side" << side << "_Disk" << disk <<"_Ring" << ring;
-	  m_dr[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -0.3, 0.3);
+	  m_dr[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dphi_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_deltaphi[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -0.2, 0.2);
+	  m_deltaphi[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.04, 0.04);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dphi_abs_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_deltaphi_fabs[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -0.2, 0.2);
+	  m_deltaphi_fabs[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, 0, 0.04);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dX_sametrack_side" << side <<"_Disk" << disk << "_Ring" << ring;
-	  m_dX_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -1, 1);
+	  m_dX_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dY_sametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dY_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 1000, -1, 1);
+	  m_dY_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  histoname << "m_dR_sametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dR_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 1000, 0, 1);
+	  m_dR_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 200, 0, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dr_sametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dr_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -0.3, 0.3);
+	  m_dr_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dphi_sametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_deltaphi_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -0.1, 0.1);
+	  m_deltaphi_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.04, 0.04);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dphi_abs_sametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_deltaphi_fabs_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, 0, 0.1);
+	  m_deltaphi_fabs_sametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, 0, 0.04);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dX_notsametrack_side" << "_Disk" << disk << "_Ring" << ring;
-	  m_dX_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 1000, -1, 1);
+	  m_dX_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dY_notsametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dY_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -1, 1);
+	  m_dY_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dR_notsametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dR_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "",1000, 0, 1);
+	  m_dR_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 200, 0, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dr_notsametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_dr_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 1000, -0.3, 0.3);
+	  m_dr_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, -0.15, 0.15);
 	  histoname.str("");
 	  
 	  
 	  histoname << "m_dphi_notsametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
-	  m_deltaphi_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 1000, -0.3, 0.3);
+	  m_deltaphi_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(), "", 200, -0.04, 0.04);
 	  histoname.str("");
+	  
+	  
+	  histoname << "m_dphi_abs_notsametrack_side" << side << "_Disk" << disk << "_Ring" << ring;
+          m_deltaphi_fabs_notsametrack[k][i][j] = td.make<TH1F>(histoname.str().c_str(),"", 200, 0, 0.04);
+          histoname.str("");
+	  
+	  
 	  
 	}
       }
@@ -428,14 +433,14 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
   digis = tdigis.product();  //pointer to digis - COB 26.02.19
   
   //a 2D counter array to count the number of clusters per disk and per ring
-  unsigned int cluCounter[8][5];
+  unsigned int cluCounter[2][4][5];
   memset(cluCounter, 0, sizeof(cluCounter));
   
   //counter for 2x coincidences
-  unsigned int x2Counter[8][5];
+  unsigned int x2Counter[2][4][5];
   memset(x2Counter, 0, sizeof(x2Counter));
   
-  unsigned int x2Counterreal[8][5];
+  unsigned int x2Counterreal[2][4][5];
   memset(x2Counterreal, 0, sizeof(x2Counterreal));
   
   
@@ -461,20 +466,16 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
     unsigned int ring = (tTopo->pxfBlade(detId));
     
     if (layer > 8) { // TEPX modules
-      //if (layer >= 1) {   
+        
       //the index in my histogram map
-      int hist_id = -1;
-      unsigned int ring_id = ring - 1;
+      int disk = 1;
       
       if (side == 1) {
 	//this is a TEPX- hit on side1
-	hist_id = layer - 9;
-	//hist_id = layer - 1;
+	disk = layer - 8;
       } else if (side == 2) {
 	//this is a TEPX+ hit on side 2
-	hist_id = 4 + layer - 9;
-	//hist_id = 4 + layer - 1;
-	
+	disk = layer - 8;	
       }
       
       // Get the geomdet
@@ -491,7 +492,7 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
       for (edmNew::DetSet<SiPixelCluster>::const_iterator cluit1 = DSVit->begin(); cluit1 != DSVit->end(); cluit1++) {
 	//increment the counters
 	nClu++;
-	cluCounter[hist_id][ring_id]++;
+	cluCounter[side-1][disk-1][ring-1]++;
 	
 	// determine the position
 	MeasurementPoint mpClu1(cluit1->x(), cluit1->y());
@@ -507,13 +508,15 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
 	  if(((rawid >> 2) & 0xFF) % 2 != 0){
 	    
 	    unsigned int coincidenceId;
-	    unsigned int neighbor = 1;
 	    
-	    const SiPixelCluster* found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu1, coincidenceId, cluit1, neighbor);
+	    const SiPixelCluster* found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu1, coincidenceId, cluit1, 1);
 	    
-	    if (found2xcoincidencecluster && neighbor == 1) {
+	    if (!found2xcoincidencecluster) 
+	      found2xcoincidencecluster = this->findCoincidence2x(detId, globalPosClu1, coincidenceId, cluit1, 2);
+	    
+	    if (found2xcoincidencecluster) {
 	      
-	      x2Counter[hist_id][ring_id]++;
+	      x2Counter[side-1][disk-1][ring-1]++;
 	      
 	      m_trackerLayout2xZR->Fill(globalPosClu1.z(), globalPosClu1.perp());
 	      m_trackerLayout2xYX->Fill(globalPosClu1.x(), globalPosClu1.y());
@@ -521,23 +524,12 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
 	      
 	    }
 	    
-	    
-	    const SiPixelCluster* found2xcoincidencecluster_R = this->findCoincidence2x(detId, globalPosClu1, coincidenceId, cluit1, neighbor);
-	    
-	    if (found2xcoincidencecluster_R && neighbor == 2) {
-	      
-	      x2Counter[hist_id][ring_id]++;
-	      
-	      m_trackerLayout2xZR->Fill(globalPosClu1.z(), globalPosClu1.perp());
-	      m_trackerLayout2xYX->Fill(globalPosClu1.x(), globalPosClu1.y());
-	      
-	      
-	    }    
 	  }
 	}
       }
     }
   }
+  
   
   //-----------------------------------------     
   // End of cluster loop
@@ -551,10 +543,10 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
       //loop the disks
       for (unsigned int j = 0; j < 5; j++) {
 	//and the rings
-	m_diskHistosCluster[k][i]->Fill(j + 1, cluCounter[i][j]);
+	m_diskHistosCluster[k][i]->Fill(j + 1, cluCounter[k][i][j]);
 	if (m_docoincidence) {
-	  m_diskHistos2x[k][i]->Fill(j + 1, x2Counter[i][j]);
-	  m_diskHistos2xreal[k][i]->Fill(j + 1, x2Counterreal[i][j]);
+	  m_diskHistos2x[k][i]->Fill(j + 1, x2Counter[k][i][j]);
+	  m_diskHistos2xreal[k][i]->Fill(j + 1, x2Counterreal[k][i][j]);
 	  
 	}
       }
@@ -593,7 +585,7 @@ const SiPixelCluster* ITclusterAnalyzerCoincidences::findCoincidence2x(DetId the
   
   const SiPixelCluster* found2xcoincidencecluster = NULL; 
   uint32_t rawid = thedetid.rawId();
-  uint32_t newmodule;  
+  uint32_t newmodule = - 1;  
   
   //now I have the raw ID and can mess with the bits
   //the side, layer and ring are the same and I just have to increment or decrement the module number
@@ -645,8 +637,7 @@ const SiPixelCluster* ITclusterAnalyzerCoincidences::findCoincidence2x(DetId the
   }
   
   
-  uint32_t newid = rawid;  
-  newid = (rawid & 0xFFFFFC03) | ((newmodule & 0xFF) << 2);
+  uint32_t newid = (rawid & 0xFFFFFC03) | ((newmodule & 0xFF) << 2);
   
   DetId id(newid);
   
@@ -680,14 +671,12 @@ const SiPixelCluster* ITclusterAnalyzerCoincidences::findCoincidence2x(DetId the
     double dphi = phi2 - phi1;
     
     
-    if(fabs(dphi) < C1*m_dphi_cuts[theside][thedisk][thering] && 
-       fabs(dr) < C2*m_dr_cuts[theside][thedisk][thering]  &&
-       fabs(globalPosClu1.z() - globalPosClu2.z()) < m_dz) {
+    if(fabs(dphi) < C1*m_dphi_cuts[theside-1][thedisk-1][thering-1] && 
+       fabs(dr) < C2*m_dr_cuts[theside-1][thedisk-1][thering-1]) {
       
       double dX = - globalPosClu1.x() + globalPosClu2.x();
       double dY = - globalPosClu1.y() + globalPosClu2.y();
       
-      double dr = sqrt(pow(globalPosClu2.x(), 2) + pow(globalPosClu2.y(), 2)) - sqrt(pow(globalPosClu1.x(), 2) + pow(globalPosClu1.y(), 2));
       double dR = sqrt(pow(globalPosClu2.x() - globalPosClu1.x(), 2) + pow(globalPosClu2.y() - globalPosClu1.y(), 2));
       
       
@@ -698,14 +687,14 @@ const SiPixelCluster* ITclusterAnalyzerCoincidences::findCoincidence2x(DetId the
 	found2xcoincidencecluster = cluit2; 
 	
       }
-            
       
-      m_dX[theside][thedisk][thering] -> Fill(dX);
-      m_dY[theside][thedisk][thering] -> Fill(dY);
-      m_dR[theside][thedisk][thering] -> Fill(dR);
-      m_dr[theside][thedisk][thering] -> Fill(dr);
-      m_deltaphi[theside][thedisk][thering] -> Fill(phi2-phi1);
-      m_deltaphi_fabs[theside][thedisk][thering] -> Fill(fabs(phi2-phi1));
+      
+      m_dX[theside-1][thedisk-1][thering-1] -> Fill(dX);
+      m_dY[theside-1][thedisk-1][thering-1] -> Fill(dY);
+      m_dR[theside-1][thedisk-1][thering-1] -> Fill(dR);
+      m_dr[theside-1][thedisk-1][thering-1] -> Fill(dr);
+      m_deltaphi[theside-1][thedisk-1][thering-1] -> Fill(phi2-phi1);
+      m_deltaphi_fabs[theside-1][thedisk-1][thering-1] -> Fill(fabs(phi2-phi1));
       
       
       edm::DetSetVector<PixelDigiSimLink>::const_iterator simLinkDSViter = findSimLinkDetSet(rawid);                                       
@@ -721,12 +710,12 @@ const SiPixelCluster* ITclusterAnalyzerCoincidences::findCoincidence2x(DetId the
       if(areSame) {
 	
 	
-	m_dX_sametrack[theside][thedisk][thering] -> Fill(dX);
-	m_dY_sametrack[theside][thedisk][thering] -> Fill(dY);
-	m_dR_sametrack[theside][thedisk][thering] -> Fill(dR);
-	m_dr_sametrack[theside][thedisk][thering] -> Fill(dr);
-	m_deltaphi_sametrack[theside][thedisk][thering] -> Fill(phi2-phi1);
-	m_deltaphi_fabs_sametrack[theside][thedisk][thering] -> Fill(fabs(phi2-phi1));
+	m_dX_sametrack[theside-1][thedisk-1][thering-1] -> Fill(dX);
+	m_dY_sametrack[theside-1][thedisk-1][thering-1] -> Fill(dY);
+	m_dR_sametrack[theside-1][thedisk-1][thering-1] -> Fill(dR);
+	m_dr_sametrack[theside-1][thedisk-1][thering-1] -> Fill(dr);
+	m_deltaphi_sametrack[theside-1][thedisk-1][thering-1] -> Fill(phi2-phi1);
+	m_deltaphi_fabs_sametrack[theside-1][thedisk-1][thering-1] -> Fill(fabs(phi2-phi1));
 	
 	
       }
@@ -735,12 +724,12 @@ const SiPixelCluster* ITclusterAnalyzerCoincidences::findCoincidence2x(DetId the
       else if(!areSame) {
 	
 	
-	m_dX_notsametrack[theside][thedisk][thering] -> Fill(dX);
-	m_dY_notsametrack[theside][thedisk][thering] -> Fill(dY);
-	m_dR_notsametrack[theside][thedisk][thering] -> Fill(dR);
-	m_dr_notsametrack[theside][thedisk][thering] -> Fill(dr);
-	m_deltaphi_notsametrack[theside][thedisk][thering] -> Fill(phi2-phi1);
-	m_deltaphi_fabs_notsametrack[theside][thedisk][thering] -> Fill(fabs(phi2-phi1));
+	m_dX_notsametrack[theside-1][thedisk-1][thering-1] -> Fill(dX);
+	m_dY_notsametrack[theside-1][thedisk-1][thering-1] -> Fill(dY);
+	m_dR_notsametrack[theside-1][thedisk-1][thering-1] -> Fill(dR);
+	m_dr_notsametrack[theside-1][thedisk-1][thering-1] -> Fill(dr);
+	m_deltaphi_notsametrack[theside-1][thedisk-1][thering-1] -> Fill(phi2-phi1);
+	m_deltaphi_fabs_notsametrack[theside-1][thedisk-1][thering-1] -> Fill(fabs(phi2-phi1));
 	
       }    
     }
