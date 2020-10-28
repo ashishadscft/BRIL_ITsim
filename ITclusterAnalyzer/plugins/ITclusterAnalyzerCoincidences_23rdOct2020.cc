@@ -511,15 +511,15 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
       
       int disk_layer_type = -1;
       
-      if(side == 1 && 1<= ring && ring <= 4 && module % 2 != 0) disk_layer_type = 2;
-      if(side == 1 && 1<= ring && ring <= 4 && module % 2 == 0) disk_layer_type = 1;
-      if(side == 1 && ring == 5 && module % 2 != 0) disk_layer_type = 1;
-      if(side == 1 && ring == 5 && module % 2 == 0) disk_layer_type = 2;
+      if(side == 1 && 1<= ring && ring <= 4 && module % 2 != 0) disk_layer_type = 1;
+      if(side == 1 && 1<= ring && ring <= 4 && module % 2 == 0) disk_layer_type = 2;
+      if(side == 1 && ring == 5 && module % 2 != 0) disk_layer_type = 2;
+      if(side == 1 && ring == 5 && module % 2 == 0) disk_layer_type = 1;
       
-      if(side == 2 && 1<= ring && ring <= 4 && module % 2 == 0) disk_layer_type = 2;
-      if(side == 2 && 1<= ring && ring <= 4 && module % 2 != 0) disk_layer_type = 1;
-      if(side == 2 && ring == 5 && module % 2 != 0) disk_layer_type = 2;
-      if(side == 2 && ring == 5 && module % 2 == 0) disk_layer_type = 1;
+      if(side == 2 && 1<= ring && ring <= 4 && module % 2 == 0) disk_layer_type = 1;
+      if(side == 2 && 1<= ring && ring <= 4 && module % 2 != 0) disk_layer_type = 2;
+      if(side == 2 && ring == 5 && module % 2 != 0) disk_layer_type = 1;
+      if(side == 2 && ring == 5 && module % 2 == 0) disk_layer_type = 2;
       
       
       //std::cout << disk_layer_type << std::endl;
@@ -539,7 +539,7 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
       
       //now loop the clusters for each detector
       for (edmNew::DetSet<SiPixelCluster>::const_iterator cluit1 = DSVit->begin(); cluit1 != DSVit->end(); cluit1++) {
-	if (disk_layer_type == 1) {   
+	//if (disk_layer_type == 1) {   
 	  
 	  //increment the counters
 	  nClu++;
@@ -553,10 +553,10 @@ void ITclusterAnalyzerCoincidences::analyze(const edm::Event& iEvent, const edm:
 	  m_trackerLayoutClustersZR->Fill(globalPosClu1.z(), globalPosClu1.perp());
 	  m_trackerLayoutClustersYX->Fill(globalPosClu1.x(), globalPosClu1.y());
 	  
-	}
+	//}
 	
 	if (m_docoincidence) {
-	  if (disk_layer_type == 2) {
+	  if (disk_layer_type == 1) {
 	    
 	    MeasurementPoint mpClu1(cluit1->x(), cluit1->y());
 	    Local3DPoint localPosClu1 = geomDetUnit->topology().localPosition(mpClu1);
